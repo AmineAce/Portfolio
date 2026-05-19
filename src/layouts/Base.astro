@@ -1,0 +1,99 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { Font } from 'astro:assets';
+
+export interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, description = 'A portfolio built with Astro — featuring precision-engineered interfaces and obsessive attention to detail.', ogImage } = Astro.props;
+const canonicalURL = Astro.url;
+const siteUrl = 'https://yourname.dev';
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Your Name',
+  url: siteUrl,
+  jobTitle: 'Frontend Developer',
+  sameAs: [
+    'https://github.com',
+    'https://linkedin.com',
+    'https://twitter.com'
+  ]
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Meta Description -->
+    <meta name="description" content={description} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+
+    <!-- Font loading via Astro Fonts API -->
+    <Font cssVariable="--font-geist-sans" preload />
+    <Font cssVariable="--font-geist-mono" preload />
+    <Font cssVariable="--font-instrument-serif" preload />
+  </head>
+  <body>
+    <a href="#hero" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-surface-900 focus:text-surface-50 focus:px-4 focus:py-2 focus:rounded-input">Skip to content</a>
+    <div id="scroll-bar" role="progressbar" aria-valuenow={0} aria-valuemin={0} aria-valuemax={100} aria-label="Page scroll progress"></div>
+    <Navbar />
+    <main role="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      (() => {
+        let ticking = false;
+
+        window.addEventListener('scroll', () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              const scrollTop = window.scrollY;
+              const docHeight = document.documentElement.scrollHeight;
+              const winHeight = window.innerHeight;
+              const scrollable = docHeight - winHeight;
+              const progress = scrollable > 0 ? (scrollTop / scrollable) * 100 : 0;
+              document.documentElement.style.setProperty('--scroll-progress', progress + '%');
+
+              const scrollBar = document.getElementById('scroll-bar');
+              if (scrollBar) {
+                scrollBar.setAttribute('aria-valuenow', Math.round(progress).toString());
+              }
+
+              ticking = false;
+            });
+            ticking = true;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

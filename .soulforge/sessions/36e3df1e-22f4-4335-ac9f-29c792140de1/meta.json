@@ -1,0 +1,38 @@
+{
+  "id": "36e3df1e-22f4-4335-ac9f-29c792140de1",
+  "title": "can you analyze the project and tell me about it ?",
+  "cwd": "/home/ace/Desktop/Projects/Portfolio-2026",
+  "startedAt": 1779140407658,
+  "updatedAt": 1779140661457,
+  "activeTabId": "7949bbce-082d-446b-95e8-44313e26dff8",
+  "forgeMode": "default",
+  "tabs": [
+    {
+      "id": "36e3df1e-22f4-4335-ac9f-29c792140de1",
+      "label": "TAB-1",
+      "activeModel": "opencode-zen/nemotron-3-super-free",
+      "sessionId": "36e3df1e-22f4-4335-ac9f-29c792140de1",
+      "planMode": false,
+      "planRequest": null,
+      "coAuthorCommits": true,
+      "forgeMode": "default",
+      "tokenUsage": {
+        "prompt": 0,
+        "completion": 78,
+        "total": 78,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "subagentInput": 0,
+        "subagentOutput": 0,
+        "lastStepInput": 0,
+        "lastStepOutput": 0,
+        "lastStepCacheRead": 0,
+        "modelBreakdown": {}
+      },
+      "messageRange": {
+        "startLine": 0,
+        "endLine": 6
+      }
+    }
+  ]
+}

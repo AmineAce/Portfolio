@@ -1,0 +1,162 @@
+---
+const navLinks = [
+  { label: 'Work', href: '#work' },
+  { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' },
+];
+---
+
+<nav id="navbar" class="fixed top-0 w-full z-50 bg-transparent transition-colors duration-base ease-expo-out">
+  <!-- Container -->
+  <div class="mx-auto flex h-16 max-w-[1100px] items-center justify-between px-6">
+    <!-- Logo -->
+    <a href="/" class="font-sans text-sm font-medium text-surface-50">
+      A<span class="text-accent">.</span>
+    </a>
+
+    <!-- Desktop Pill Navigation -->
+    <div class="hidden rounded-pill border border-surface-800 bg-surface-900 py-1.5 px-2 md:flex">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          data-nav-link
+          class="rounded-pill px-4 py-2 text-sm text-surface-400 transition-colors duration-base ease-expo-out hover:text-surface-200"
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+
+    <!-- Resume Button -->
+    <a
+      href="/resume.pdf"
+      target="_blank"
+      class="hidden rounded-input border border-surface-800 px-4 py-2 text-sm text-surface-200 transition-colors duration-base ease-expo-out hover:bg-surface-800 md:inline-block"
+    >
+      Resume
+    </a>
+
+    <!-- Mobile Menu Toggle -->
+    <button id="menu-toggle" class="flex flex-col items-center gap-1 md:hidden focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2" aria-label="Open navigation menu">
+      <div class="h-[1.5px] w-[18px] bg-surface-400"></div>
+      <div class="h-[1.5px] w-[18px] bg-surface-400"></div>
+      <div class="h-[1.5px] w-[18px] bg-surface-400"></div>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu Overlay -->
+<div id="mobile-menu" class="fixed inset-0 z-[60] hidden flex-col bg-surface-black">
+  <div class="flex justify-end px-6 pt-6">
+    <button id="menu-close" class="text-surface-400 text-2xl leading-none focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2" aria-label="Close navigation menu">&times;</button>
+  </div>
+  <div class="flex flex-1 flex-col items-center justify-center gap-8">
+    {navLinks.map((link) => (
+      <a
+        href={link.href}
+        data-nav-link-mobile
+        class="text-2xl text-surface-400 transition-colors duration-base ease-expo-out hover:text-surface-200"
+      >
+        {link.label}
+      </a>
+    ))}
+  </div>
+</div>
+
+<script>
+  (() => {
+    const navbar = document.getElementById('navbar');
+    const menuToggle = document.getElementById('menu-toggle');
+    const menuClose = document.getElementById('menu-close');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navLinks = document.querySelectorAll('[data-nav-link]');
+    const mobileNavLinks = document.querySelectorAll('[data-nav-link-mobile]');
+    const allLinkSelectors = [...navLinks, ...mobileNavLinks];
+    const sectionIds = ['work', 'about', 'contact'];
+
+    // --- Glass scroll effect ---
+    const onScroll = () => {
+      if (!navbar) return;
+      if (window.scrollY > 80) {
+        navbar.classList.add('bg-surface-black/80', 'backdrop-blur-md', 'border-b', 'border-surface-800');
+      } else {
+        navbar.classList.remove('bg-surface-black/80', 'backdrop-blur-md', 'border-b', 'border-surface-800');
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // --- Active link state via IntersectionObserver ---
+    const setActiveLink = (activeLink: Element | null) => {
+      allLinkSelectors.forEach((link) => {
+        link.classList.remove('bg-surface-800', 'text-surface-200');
+      });
+      if (activeLink) {
+        activeLink.classList.add('bg-surface-800', 'text-surface-200');
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            const link = document.querySelector(`[data-nav-link][href="#${id}"]`);
+            if (link) {
+              setActiveLink(link);
+            }
+            const mobileLink = document.querySelector(`[data-nav-link-mobile][href="#${id}"]`);
+            if (mobileLink) {
+              setActiveLink(mobileLink);
+            }
+          }
+        }
+      },
+      { threshold: 0.6 }
+    );
+
+    // Set default active state to "Work"
+    const defaultLink = document.querySelector('[data-nav-link][href="#work"]');
+    if (defaultLink) {
+      setActiveLink(defaultLink);
+    }
+
+    // Observe sections after DOM is ready
+    const observeSections = () => {
+      sectionIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', observeSections);
+    } else {
+      observeSections();
+    }
+
+    // --- Mobile menu ---
+    if (menuToggle && mobileMenu) {
+      menuToggle.addEventListener('click', () => {
+        mobileMenu.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      });
+    }
+
+    const closeMenu = () => {
+      if (!mobileMenu) return;
+      mobileMenu.classList.add('hidden');
+      document.body.style.overflow = '';
+    };
+
+    if (menuClose) {
+      menuClose.addEventListener('click', closeMenu);
+    }
+
+    // Close menu on nav link click
+    mobileNavLinks.forEach((link) => {
+      link.addEventListener('click', closeMenu);
+    });
+  })();
+</script>

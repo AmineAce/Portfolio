@@ -1,0 +1,123 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectCard from './ProjectCard.astro';
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+
+const featuredProject = sortedProjects.find((p) => p.data.featured) || sortedProjects[0];
+const remainingProjects = sortedProjects.filter((p) => p !== featuredProject);
+
+const nextOrder = sortedProjects.length > 0 ? Math.max(...sortedProjects.map((p) => p.data.order || 0), 0) + 1 : 1;
+---
+
+<style>
+  [data-reveal="card"] {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  [data-reveal="header"] {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+</style>
+
+<section id="work" class="max-w-[1100px] mx-auto px-6 py-24">
+  <!-- Section Header -->
+  <div data-reveal="header" class="flex justify-between items-end mb-16">
+    <div>
+      <p class="text-xs text-accent-ondark font-medium tracking-widest uppercase mb-3">
+        Selected Work
+      </p>
+      <h2 class="text-4xl font-medium text-surface-200 tracking-tight">
+        Projects
+      </h2>
+    </div>
+    <p class="text-sm text-surface-600 max-w-xs text-right">
+      A focused set of work — built with intention, shipped with care.
+    </p>
+  </div>
+
+  <!-- Featured Project -->
+  <div data-reveal="card" class="mb-4">
+    <ProjectCard entry={featuredProject} featured={true} />
+  </div>
+
+  <!-- Project Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {remainingProjects.map((project) => (
+      <ProjectCard entry={project} />
+    ))}
+
+    <!-- Coming Soon Card -->
+    <div
+      class="min-h-[200px] flex flex-col items-center justify-center rounded-card border border-dashed border-surface-800"
+    >
+      <span class="text-sm text-surface-400 mb-1">More coming soon</span>
+      <span class="text-xs text-surface-400">Currently building #{nextOrder}</span>
+    </div>
+  </div>
+
+  <script>
+    import { animate, inView } from 'motion';
+
+    const initReveal = () => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Header reveal
+      const header = document.querySelector('[data-reveal="header"]') as HTMLElement | null;
+      if (header) {
+        if (prefersReducedMotion) {
+          header.style.opacity = '1';
+          header.style.transform = 'none';
+        } else {
+          (animate as any)(
+            header,
+            { opacity: [0, 1], y: [16, 0] },
+            { duration: 0.5, delay: 0, easing: [0.16, 1, 0.3, 1] }
+          );
+        }
+      }
+
+      // Card reveals
+      const cards = Array.from(document.querySelectorAll('[data-reveal="card"]')) as HTMLElement[];
+
+      if (prefersReducedMotion) {
+        cards.forEach((card) => {
+          card.style.opacity = '1';
+          card.style.transform = 'none';
+        });
+        return;
+      }
+
+      cards.forEach((card, index) => {
+        inView(
+          card,
+          () => {
+            (animate as any)(
+              card,
+              { opacity: [0, 1], y: [24, 0] },
+              { duration: 0.55, delay: index * 0.1, easing: [0.16, 1, 0.3, 1] }
+            );
+          },
+          { threshold: 0.15 } as any
+        );
+      });
+    };
+
+    const runInit = () => {
+      if (!(window as any).__projectsRevealInitialized) {
+        (window as any).__projectsRevealInitialized = true;
+        initReveal();
+      }
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', runInit);
+    } else {
+      runInit();
+    }
+
+    document.addEventListener('astro:page-load', runInit);
+  </script>
+</section>

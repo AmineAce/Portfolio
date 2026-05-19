@@ -1,0 +1,45 @@
+{
+  "id": "8b8dd480-a9af-4db2-9ea9-b86bdcef5e42",
+  "title": "Context\nWho: You are a Senior Frontend Engineer specialis...",
+  "cwd": "/home/ace/Desktop/Projects/Portfolio-2026",
+  "startedAt": 1779103667451,
+  "updatedAt": 1779104515178,
+  "activeTabId": "8b8dd480-a9af-4db2-9ea9-b86bdcef5e42",
+  "forgeMode": "default",
+  "tabs": [
+    {
+      "id": "8b8dd480-a9af-4db2-9ea9-b86bdcef5e42",
+      "label": "TAB-1",
+      "activeModel": "opencode-zen/deepseek-v4-flash-free",
+      "sessionId": "8b8dd480-a9af-4db2-9ea9-b86bdcef5e42",
+      "planMode": false,
+      "planRequest": null,
+      "coAuthorCommits": true,
+      "forgeMode": "default",
+      "tokenUsage": {
+        "cacheRead": 17019,
+        "cacheWrite": 0,
+        "subagentInput": 0,
+        "subagentOutput": 0,
+        "lastStepInput": 345,
+        "lastStepOutput": 174,
+        "lastStepCacheRead": 17019,
+        "modelBreakdown": {
+          "opencode-zen/minimax-m2.5-free": {
+            "input": 17171,
+            "output": 494,
+            "cacheRead": 17019,
+            "cacheWrite": 0
+          }
+        },
+        "prompt": 17171,
+        "completion": 572,
+        "total": 34762
+      },
+      "messageRange": {
+        "startLine": 0,
+        "endLine": 6
+      }
+    }
+  ]
+}

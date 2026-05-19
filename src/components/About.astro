@@ -1,0 +1,159 @@
+---
+---
+
+<style>
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+</style>
+
+<section id="about" class="max-w-[1100px] mx-auto px-6 py-24">
+  <div data-reveal="about-header" class="mb-16">
+    <p class="text-xs text-accent-ondark font-medium tracking-widest uppercase mb-3">
+      About Me
+    </p>
+    <h2 class="text-4xl font-medium text-surface-200 tracking-tight">
+      A little context.
+    </h2>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+    <div class="md:col-span-3" data-reveal="about-card">
+      <div class="bg-surface-900 border border-surface-800 rounded-card p-8 flex flex-col h-full">
+        <div class="text-xs text-accent-ondark tracking-widest uppercase mb-6">
+          Who I am
+        </div>
+        <h3 class="font-serif italic text-2xl text-surface-white leading-snug tracking-tight mb-6">
+          I build things that feel inevitable.
+        </h3>
+        <p class="text-surface-400 text-sm leading-relaxed">
+          Based in Casablanca. I spend my days turning precise designs into production interfaces, and my evenings obsessing over the 200ms that separates 'it works' from 'it's alive.'
+        </p>
+        <div class="flex-1"></div>
+        <div class="pt-6 border-t border-surface-800 mt-6">
+          <div class="text-xs text-surface-400 tracking-widest uppercase mb-3">
+            Current stack
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-3 py-1 rounded-pill text-xs bg-accent/5 border border-accent/30 text-accent-ondark">Astro</span>
+            <span class="px-3 py-1 rounded-pill text-xs bg-accent/5 border border-accent/30 text-accent-ondark">TypeScript</span>
+            <span class="px-3 py-1 rounded-pill text-xs bg-accent/5 border border-accent/30 text-accent-ondark">React</span>
+            <span class="px-3 py-1 rounded-pill text-xs bg-surface-900 border border-surface-800 text-surface-400">Tailwind CSS</span>
+            <span class="px-3 py-1 rounded-pill text-xs bg-surface-900 border border-surface-800 text-surface-400">Figma</span>
+            <span class="px-3 py-1 rounded-pill text-xs bg-surface-900 border border-surface-800 text-surface-400">Motion One</span>
+            <span class="px-3 py-1 rounded-pill text-xs bg-surface-900 border border-surface-800 text-surface-400">Git</span>
+            <span class="px-3 py-1 rounded-pill text-xs bg-surface-900 border border-surface-800 text-surface-400">Vercel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="md:col-span-2 flex flex-col gap-4">
+      <div data-reveal="about-card" class="bg-surface-900 border border-surface-800 rounded-card p-5">
+        <span aria-hidden="true" class="text-lg mb-3 block">📍</span>
+        <div class="text-xs text-surface-400 tracking-widest uppercase mb-1">
+          Location
+        </div>
+        <div class="text-sm text-surface-300">
+          Casablanca, MA · Remote worldwide
+        </div>
+      </div>
+
+      <div data-reveal="about-card" class="bg-surface-900 border-l-2 border-l-accent border-t-surface-800 border-r-surface-800 border-b-surface-800 rounded-card p-5">
+        <div class="text-xs text-accent-ondark tracking-widest uppercase mb-4">
+          Currently
+        </div>
+        <div class="flex items-center gap-2 py-2 border-b border-surface-800">
+          <div class="w-[5px] h-[5px] rounded-full bg-accent flex-shrink-0"></div>
+          <span class="text-xs text-surface-400">Building this portfolio</span>
+        </div>
+        <div class="flex items-center gap-2 py-2 border-b border-surface-800">
+          <div class="w-[5px] h-[5px] rounded-full bg-accent flex-shrink-0"></div>
+          <span class="text-xs text-surface-400">Learning advanced animations</span>
+        </div>
+        <div class="flex items-center gap-2 py-2">
+          <div class="w-[5px] h-[5px] rounded-full bg-accent flex-shrink-0"></div>
+          <span class="text-xs text-surface-400">Open to new opportunities</span>
+        </div>
+      </div>
+
+      <div data-reveal="about-card" class="bg-surface-900 border border-surface-800 rounded-card p-5">
+        <span aria-hidden="true" class="text-lg mb-3 block">🎓</span>
+        <div class="text-xs text-surface-400 tracking-widest uppercase mb-1">
+          Background
+        </div>
+        <div class="text-sm text-surface-300">
+          Self-taught · Passionate about the intersection of design and engineering
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { animate, inView } from 'motion';
+
+    const initReveal = () => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const header = document.querySelector('[data-reveal="about-header"]') as HTMLElement | null;
+      if (header) {
+        if (prefersReducedMotion) {
+          header.style.opacity = '1';
+          header.style.transform = 'none';
+        } else {
+          inView(
+            header,
+            () => {
+              (animate as any)(
+                header,
+                { opacity: [0, 1], y: [16, 0] },
+                { duration: 0.5, delay: 0, easing: [0.16, 1, 0.3, 1] }
+              );
+            },
+            { threshold: 0.2 } as any
+          );
+        }
+      }
+
+      const cards = Array.from(document.querySelectorAll('[data-reveal="about-card"]')) as HTMLElement[];
+
+      if (prefersReducedMotion) {
+        cards.forEach((card) => {
+          card.style.opacity = '1';
+          card.style.transform = 'none';
+        });
+        return;
+      }
+
+      cards.forEach((card, index) => {
+        inView(
+          card,
+          () => {
+            (animate as any)(
+              card,
+              { opacity: [0, 1], y: [24, 0] },
+              { duration: 0.55, delay: index * 0.08, easing: [0.16, 1, 0.3, 1] }
+            );
+          },
+          { threshold: 0.1 } as any
+        );
+      });
+    };
+
+    const runInit = () => {
+      if (!(window as any).__aboutRevealInitialized) {
+        (window as any).__aboutRevealInitialized = true;
+        initReveal();
+      }
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', runInit);
+    } else {
+      runInit();
+    }
+
+    document.addEventListener('astro:page-load', runInit);
+  </script>
+</section>

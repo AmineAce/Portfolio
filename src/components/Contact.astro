@@ -1,0 +1,127 @@
+---
+---
+
+<style>
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+</style>
+
+<section id="contact" class="max-w-[1100px] mx-auto px-6 py-24">
+  <div data-reveal="contact-card" class="bg-surface-900 border border-surface-800 rounded-card overflow-hidden relative">
+    <div class="absolute pointer-events-none w-64 h-64 rounded-full bg-accent/5 blur-3xl top-0 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+    
+    <div class="relative text-center py-16 px-8 max-w-lg mx-auto">
+      <h2 class="text-3xl md:text-4xl font-medium text-surface-white tracking-tight leading-tight mb-4">
+        Let's work together.
+      </h2>
+      <p class="text-surface-400 text-sm leading-relaxed mb-10">
+        Whether it's a full project, a quick question, or just to say hello — my inbox is always open.
+      </p>
+      
+      <a 
+        href="mailto:hello@example.com" 
+        id="email-link"
+        class="block text-xl md:text-2xl font-medium text-surface-white tracking-tight mb-10 underline underline-offset-4 decoration-surface-700 hover:decoration-accent transition-colors duration-base"
+      >
+        hello@example.com
+      </a>
+      
+      <div class="flex justify-center flex-wrap gap-3">
+        <a 
+          href="https://github.com" 
+          target="_blank"
+          class="inline-flex items-center gap-2 bg-surface-900 border border-surface-800 rounded-input px-4 py-2 text-xs text-surface-400 hover:text-surface-200 hover:border-surface-600 transition-colors duration-micro"
+        >
+          ↗ GitHub
+        </a>
+        <a 
+          href="https://linkedin.com" 
+          target="_blank"
+          class="inline-flex items-center gap-2 bg-surface-900 border border-surface-800 rounded-input px-4 py-2 text-xs text-surface-400 hover:text-surface-200 hover:border-surface-600 transition-colors duration-micro"
+        >
+          ↗ LinkedIn
+        </a>
+        <a 
+          href="https://twitter.com" 
+          target="_blank"
+          class="inline-flex items-center gap-2 bg-surface-900 border border-surface-800 rounded-input px-4 py-2 text-xs text-surface-400 hover:text-surface-200 hover:border-surface-600 transition-colors duration-micro"
+        >
+          ↗ Twitter
+        </a>
+        <a 
+          href="/resume.pdf" 
+          target="_blank"
+          class="inline-flex items-center gap-2 bg-surface-900 border border-surface-800 rounded-input px-4 py-2 text-xs text-surface-400 hover:text-surface-200 hover:border-surface-600 transition-colors duration-micro"
+        >
+          ↗ Resume
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    import { animate, inView } from 'motion';
+
+    const initReveal = () => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const card = document.querySelector('[data-reveal="contact-card"]') as HTMLElement | null;
+      if (card) {
+        if (prefersReducedMotion) {
+          card.style.opacity = '1';
+          card.style.transform = 'none';
+        } else {
+          inView(
+            card,
+            () => {
+              (animate as any)(
+                card,
+                { opacity: [0, 1], y: [24, 0] },
+                { duration: 0.6, delay: 0, easing: [0.16, 1, 0.3, 1] }
+              );
+            },
+            { threshold: 0.15 } as any
+          );
+        }
+      }
+    };
+
+    const runInit = () => {
+      if (!(window as any).__contactRevealInitialized) {
+        (window as any).__contactRevealInitialized = true;
+        initReveal();
+      }
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', runInit);
+    } else {
+      runInit();
+    }
+
+    document.addEventListener('astro:page-load', runInit);
+  </script>
+
+  <script>
+    const emailLink = document.getElementById('email-link');
+    
+    if (emailLink) {
+      emailLink.addEventListener('click', async () => {
+        const originalText = emailLink.textContent || '';
+        
+        try {
+          await navigator.clipboard.writeText(originalText);
+          emailLink.textContent = 'Copied ✓';
+          
+          setTimeout(() => {
+            emailLink.textContent = originalText;
+          }, 2000);
+        } catch (err) {
+          // Silent fail - clipboard API may not be available without HTTPS
+        }
+      });
+    }
+  </script>
+</section>

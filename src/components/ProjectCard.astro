@@ -1,0 +1,134 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface ProjectData {
+  title: string;
+  description?: string;
+  tags?: string[];
+  year?: number;
+  featured?: boolean;
+  liveUrl?: string;
+  githubUrl?: string;
+  order?: number;
+  coverColor?: string;
+  slug?: string;
+}
+
+interface Props {
+  entry?: CollectionEntry<'projects'> | ProjectData;
+  featured?: boolean;
+}
+
+const { entry, featured = false } = Astro.props;
+
+// Extract data safely: support full CollectionEntry or plain data object
+const data: ProjectData = entry && 'data' in entry ? entry.data : (entry as ProjectData) || {};
+
+const {
+  title = '',
+  description = '',
+  tags = [],
+  liveUrl,
+  githubUrl,
+  order,
+} = data;
+
+// Slug for case study URL — CollectionEntry has .slug; plain data may have .id or .slug
+const slug = entry && 'id' in entry ? entry.id : (entry as ProjectData)?.slug || '';
+const caseStudyUrl = slug ? `/work/${slug}` : undefined;
+
+// Order display with fallback
+const orderDisplay = order != null ? (order < 10 ? `0${order}` : order) : '—';
+---
+
+<article
+  class="group relative flex h-full flex-col overflow-hidden rounded-card border border-surface-800 bg-surface-900 transition-colors duration-base ease-expo-out"
+>
+  <!-- Card Image Area -->
+  <div class={featured ? 'h-[260px]' : 'h-[160px]'} style="background-color: var(--color-surface-950);">
+    <div
+      class="mx-auto w-4/5 h-3/4 mt-4 rounded-card border border-surface-800 bg-surface-900 flex flex-col items-center justify-center"
+    >
+      <!-- Browser Chrome Dots -->
+      <div class="flex gap-1.5 self-start ml-4 mt-3">
+        <div class="h-2 w-2 rounded-full bg-surface-700"></div>
+        <div class="h-2 w-2 rounded-full bg-surface-700"></div>
+        <div class="h-2 w-2 rounded-full bg-surface-700"></div>
+      </div>
+      <!-- Placeholder Text -->
+      <span class="mt-8 text-xs text-surface-400">live preview on hover</span>
+    </div>
+  </div>
+
+  <!-- Card Body -->
+  <div class="p-5 flex flex-col flex-1">
+    <!-- Metadata Row -->
+    <div class="flex justify-between items-center mb-3">
+      <span class="text-xs text-surface-400 font-medium">
+        {orderDisplay}
+      </span>
+      <div class="flex gap-1.5">
+        {tags.map((tag, index) => (
+          <span
+            class={
+              index === 0
+                ? 'px-3 py-1 rounded-pill text-xs bg-accent-dim text-accent-ondark border border-accent/30'
+                : 'px-3 py-1 rounded-pill text-xs bg-surface-900 text-surface-400 border border-surface-800'
+            }
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <!-- Title -->
+    <h3
+      class={
+        featured
+          ? 'text-xl font-medium tracking-tight text-surface-200 leading-snug mb-2'
+          : 'text-lg font-medium tracking-tight text-surface-200 leading-snug mb-2'
+      }
+    >
+      {title}
+    </h3>
+
+    <!-- Description -->
+    <p class="text-sm leading-relaxed text-surface-600 mb-5 flex-1">
+      {description}
+    </p>
+
+    <!-- Footer -->
+    <div class="flex justify-between items-center mt-auto">
+      <div class="flex gap-3">
+        {liveUrl && (
+          <a
+            href={liveUrl}
+            target="_blank"
+            class="text-sm text-surface-400 hover:text-surface-200 transition-colors duration-base ease-expo-out"
+          >
+            Live site ↗
+          </a>
+        )}
+        {caseStudyUrl && (
+          <a
+              href={caseStudyUrl}
+              class="w-7 h-7 flex items-center justify-center rounded-input border border-surface-800 text-surface-400 hover:border-accent hover:text-accent transition-colors duration-base ease-expo-out"
+              aria-label="Read case study"
+          >
+              →
+          </a>
+        )}
+        {githubUrl && (
+          <a
+            href={githubUrl}
+            target="_blank"
+            class="px-3 py-1 rounded-input border border-surface-800 text-surface-400 hover:border-accent hover:text-accent transition-colors duration-base ease-expo-out text-sm"
+          >
+            GH
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+</article>

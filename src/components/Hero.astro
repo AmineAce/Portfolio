@@ -1,0 +1,147 @@
+/// <reference types="motion/types" />
+<style>
+  [data-hero-element] {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+</style>
+
+<section id="hero" class="flex min-h-screen flex-col justify-center px-6 pt-24">
+  <!-- Center container matching navbar max-width -->
+  <div class="mx-auto w-full max-w-[1100px]">
+    <!-- Availability Badge -->
+    <span
+      data-hero-element="badge"
+      class="inline-flex items-center gap-2 rounded-pill border border-surface-800 bg-surface-900 px-4 py-1.5 text-xs text-surface-400"
+    >
+      <span class="h-2 w-2 rounded-full bg-green-500"></span>
+      Available for freelance &middot; 2026
+    </span>
+
+    <!-- Name Heading -->
+    <h1
+      data-hero-element="name"
+      class="mt-6 font-serif italic text-surface-white text-5xl leading-tight tracking-tighter lg:text-7xl"
+    >
+      Your Name
+    </h1>
+
+    <!-- Role / Title (decorative, not a heading) -->
+    <div
+      data-hero-element="role"
+      class="font-sans font-medium text-surface-400 text-5xl leading-tight tracking-tighter lg:text-7xl mb-8"
+    >
+      Frontend Developer.
+    </div>
+
+    <!-- Description -->
+    <p
+      data-hero-element="desc"
+      class="mb-10 max-w-lg text-base leading-relaxed text-surface-400"
+    >
+      Building precise, performant interfaces that feel as good as they look.
+      Obsessed with the gap between design and code.
+    </p>
+
+    <!-- CTA Button Row -->
+    <div data-hero-element="cta" class="mb-16 flex flex-wrap gap-3">
+      <a
+        href="#work"
+        class="rounded-input bg-surface-50 px-6 py-3 text-sm font-medium text-surface-black"
+      >
+        View Work
+      </a>
+      <a
+        href="#contact"
+        class="rounded-input border border-surface-800 px-6 py-3 text-sm text-surface-200"
+      >
+        Get in Touch
+      </a>
+    </div>
+
+    <!-- Stats Row -->
+    <div data-hero-element="stats" class="flex gap-10 border-t border-surface-900 pt-8">
+      <div>
+        <span class="text-2xl font-medium tracking-tight text-surface-white">2+</span>
+        <div class="mt-1 text-xs text-surface-400">Years building</div>
+      </div>
+      <div>
+        <span class="text-2xl font-medium tracking-tight text-surface-white">100</span>
+        <div class="mt-1 text-xs text-surface-400">Lighthouse target</div>
+      </div>
+      <div>
+        <span class="text-2xl font-medium tracking-tight text-surface-white">&infin;</span>
+        <div class="mt-1 text-xs text-surface-400">Attention to detail</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cursor Follower -->
+<div
+  id="cursor-follower"
+  aria-hidden="true"
+  class="fixed pointer-events-none w-10 h-10 rounded-full bg-accent/10 z-50 transform -translate-x-1/2 -translate-y-1/2"
+></div>
+
+<script>
+  import { animate } from 'motion';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const cursor = document.getElementById('cursor-follower') as HTMLElement | null;
+
+    const animationSequence = [
+      { selector: '[data-hero-element="badge"]', delay: 0 },
+      { selector: '[data-hero-element="name"]', delay: 0.08 },
+      { selector: '[data-hero-element="role"]', delay: 0.16 },
+      { selector: '[data-hero-element="desc"]', delay: 0.24 },
+      { selector: '[data-hero-element="cta"]', delay: 0.32 },
+      { selector: '[data-hero-element="stats"]', delay: 0.45 },
+    ];
+
+    if (prefersReducedMotion) {
+      animationSequence.forEach(({ selector }) => {
+        const el = document.querySelector(selector) as HTMLElement | null;
+        if (el) {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }
+      });
+    } else {
+      animationSequence.forEach(({ selector, delay }) => {
+        const el = document.querySelector(selector) as HTMLElement | null;
+        if (el) {
+          (animate as any)(
+            el,
+            { opacity: [0, 1], y: [20, 0] },
+            { duration: 0.6, delay, easing: [0.16, 1, 0.3, 1] }
+          );
+        }
+      });
+    }
+
+    // --- Cursor Follower ---
+    if (cursor) {
+      const onMouseMove = (e: MouseEvent) => {
+        (animate as any)(
+          cursor,
+          { x: e.clientX, y: e.clientY },
+          { duration: 0.08, easing: 'linear' }
+        );
+      };
+
+      const onTouchStart = () => {
+        cursor.style.display = 'none';
+      };
+
+      const onMouseEnterAfterTouch = () => {
+        cursor.style.display = '';
+      };
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('touchstart', onTouchStart, { once: true });
+      document.addEventListener('mouseenter', onMouseEnterAfterTouch, { once: true });
+    }
+  });
+</script>

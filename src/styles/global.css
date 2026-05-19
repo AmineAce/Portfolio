@@ -1,0 +1,41 @@
+@import "tailwindcss";
+@config "../../tailwind.config.mjs";
+
+/*
+ * Design System Tokens
+ * surface-black: #09090b
+ * surface-200: #e4e4e7
+ * font-sans: "Geist Sans", ui-sans-serif, system-ui, sans-serif
+ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: #09090b;
+    color: #e4e4e7;
+    font-family: "Geist Sans", ui-sans-serif, system-ui, sans-serif;
+  }
+}
+
+@layer base {
+  :root {
+    --scroll-progress: 0%;
+  }
+
+  #scroll-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: var(--scroll-progress);
+    background-color: #6366f1;
+    z-index: 9999;
+  }
+}

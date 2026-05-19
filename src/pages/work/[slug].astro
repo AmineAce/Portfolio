@@ -1,0 +1,64 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const pageTitle = `${entry.data.title} — Your Name`;
+const pageDescription = entry.data.description;
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <main class="max-w-[1100px] mx-auto px-6 py-24">
+    <header class="mb-12">
+      <h1 class="text-4xl font-medium text-surface-200 tracking-tight mb-4">
+        {entry.data.title}
+      </h1>
+      <div class="flex flex-wrap gap-2 mb-4">
+        {entry.data.tags.map((tag: string) => (
+          <span class="px-3 py-1 rounded-pill text-xs bg-surface-900 text-surface-400 border border-surface-800">
+            {tag}
+          </span>
+        ))}
+      </div>
+      <p class="text-sm text-surface-600">
+        {entry.data.year} &middot; {entry.data.description}
+      </p>
+      <div class="flex gap-4 mt-4">
+        {entry.data.liveUrl && (
+          <a
+            href={entry.data.liveUrl}
+            target="_blank"
+            class="text-sm text-surface-400 hover:text-surface-200 transition-colors"
+          >
+            Live site ↗
+          </a>
+        )}
+        {entry.data.githubUrl && (
+          <a
+            href={entry.data.githubUrl}
+            target="_blank"
+            class="text-sm text-surface-400 hover:text-surface-200 transition-colors"
+          >
+            GitHub ↗
+          </a>
+        )}
+      </div>
+    </header>
+
+    <hr class="border-surface-800 mb-12" />
+
+    <article class="prose prose-invert max-w-none">
+      <Content />
+    </article>
+  </main>
+</Base>
