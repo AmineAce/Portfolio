@@ -8,7 +8,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://portfolio-lemon-seven-57.vercel.app',
+  site: 'https://aemine.vercel.app',
   integrations: [icon(), sitemap()],
   vite: {
     plugins: [tailwindcss()]
