@@ -10,20 +10,20 @@ export interface Props {
   ogImage?: string;
 }
 
-const { title, description = 'A portfolio built with Astro — featuring precision-engineered interfaces and obsessive attention to detail.', ogImage } = Astro.props;
+const { title, description = 'Frontend developer based in Casablanca, building precise, performant interfaces that feel as good as they look.', ogImage } = Astro.props;
 const canonicalURL = Astro.url;
 const siteUrl = 'https://aemine.vercel.app';
 
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'Person',
-  name: 'Your Name',
+  name: 'Amine',
   url: siteUrl,
   jobTitle: 'Frontend Developer',
   sameAs: [
-    'https://github.com/yourusername',
-    'https://linkedin.com/in/yourusername',
-    'https://twitter.com/yourusername'
+    'https://github.com/AmineAce',
+    'https://linkedin.com/in/amineace',
+    'https://twitter.com/amineace'
   ]
 };
 ---
