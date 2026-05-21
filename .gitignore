@@ -5,3 +5,5 @@ dist/
 .DS_Store
 .astro/
 .soulforge/
+.vercel
+.env*.local
