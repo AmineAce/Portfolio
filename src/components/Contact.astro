@@ -1,6 +1,3 @@
----
----
-
 <style>
   [data-reveal] {
     opacity: 0;
@@ -9,83 +6,124 @@
 </style>
 
 <section id="contact" class="max-w-[1100px] mx-auto px-6 py-24">
-  <div data-reveal="contact-card" class="bg-surface-900 border border-surface-800 rounded-card overflow-hidden relative">
-    <div class="absolute pointer-events-none w-64 h-64 rounded-full bg-accent/5 blur-3xl top-0 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-    
-    <div class="relative text-center py-16 px-8 max-w-lg mx-auto">
-      <h2 class="text-3xl md:text-4xl font-medium text-surface-white tracking-tight leading-tight mb-4">
-        Let's work together.
-      </h2>
-      <p class="text-surface-400 text-sm leading-relaxed mb-10">
-        Whether it's a full project, a quick question, or just to say hello — my inbox is always open.
-      </p>
-      
-      <a 
-        href="mailto:contact@aemine.dev" 
-        id="email-link"
-        class="block text-xl md:text-2xl font-medium text-surface-white tracking-tight mb-10 underline underline-offset-4 decoration-surface-700 hover:decoration-accent transition-colors duration-base"
+  <div data-reveal="contact-social" class="bg-surface-900 border border-surface-800 rounded-card max-w-[500px] mx-auto mb-4">
+    <div class="flex items-center justify-center gap-6 py-4 px-6">
+      <a
+        href="https://github.com/AmineAce"
+        target="_blank"
+        class="text-xs text-surface-500 hover:text-accent transition-colors duration-base tracking-wider uppercase"
       >
-        contact@aemine.dev
+        GitHub
       </a>
-      
-      <div class="flex justify-center flex-wrap gap-3">
-        <a 
-          href="https://github.com" 
-          target="_blank"
-          class="inline-flex items-center gap-2 bg-surface-900 border border-surface-800 rounded-input px-4 py-2 text-xs text-surface-400 hover:text-surface-200 hover:border-surface-600 transition-colors duration-micro"
-        >
-          ↗ GitHub
-        </a>
-        <a 
-          href="https://linkedin.com" 
-          target="_blank"
-          class="inline-flex items-center gap-2 bg-surface-900 border border-surface-800 rounded-input px-4 py-2 text-xs text-surface-400 hover:text-surface-200 hover:border-surface-600 transition-colors duration-micro"
-        >
-          ↗ LinkedIn
-        </a>
-        <a 
-          href="https://twitter.com" 
-          target="_blank"
-          class="inline-flex items-center gap-2 bg-surface-900 border border-surface-800 rounded-input px-4 py-2 text-xs text-surface-400 hover:text-surface-200 hover:border-surface-600 transition-colors duration-micro"
-        >
-          ↗ Twitter
-        </a>
-        <a 
-          href="/resume.pdf" 
-          target="_blank"
-          class="inline-flex items-center gap-2 bg-surface-900 border border-surface-800 rounded-input px-4 py-2 text-xs text-surface-400 hover:text-surface-200 hover:border-surface-600 transition-colors duration-micro"
-        >
-          ↗ Resume
-        </a>
-      </div>
+      <span class="text-surface-700 select-none text-xs">/</span>
+      <a
+        href="https://x.com/_AMINEACE"
+        target="_blank"
+        class="text-xs text-surface-500 hover:text-accent transition-colors duration-base tracking-wider uppercase"
+      >
+        X
+      </a>
     </div>
   </div>
-  
+
+  <div data-reveal="contact-card" class="bg-surface-900 border border-surface-800 rounded-card overflow-hidden relative max-w-[500px] mx-auto">
+    <div class="relative min-h-[600px] flex flex-col justify-center px-6">
+      <div class="text-center mb-8">
+        <h2 class="font-serif italic text-3xl md:text-4xl text-surface-white tracking-tight leading-tight mb-3">
+          Let's work together.
+        </h2>
+        <p class="text-surface-400 text-sm leading-relaxed max-w-xs mx-auto">
+          Send me a message and I'll get back to you as soon as possible.
+        </p>
+      </div>
+
+      <form id="contact-form" class="text-left space-y-5">
+        <div class="group">
+          <label for="name" class="block text-xs text-surface-500 tracking-widest uppercase mb-2 transition-colors duration-micro group-focus-within:text-accent">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            class="w-full bg-surface-950/80 border border-surface-800 rounded-input px-4 py-3 text-sm text-surface-200 placeholder-surface-600/60 outline-none transition-all duration-base ease-expo-out focus:border-accent/60 focus:bg-surface-950 focus:shadow-[0_0_20px_-8px] focus:shadow-accent/20"
+            placeholder="Your name"
+          />
+        </div>
+
+        <div class="group">
+          <label for="email" class="block text-xs text-surface-500 tracking-widest uppercase mb-2 transition-colors duration-micro group-focus-within:text-accent">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            class="w-full bg-surface-950/80 border border-surface-800 rounded-input px-4 py-3 text-sm text-surface-200 placeholder-surface-600/60 outline-none transition-all duration-base ease-expo-out focus:border-accent/60 focus:bg-surface-950 focus:shadow-[0_0_20px_-8px] focus:shadow-accent/20"
+            placeholder="your@email.com"
+          />
+        </div>
+
+        <div class="group">
+          <label for="message" class="block text-xs text-surface-500 tracking-widest uppercase mb-2 transition-colors duration-micro group-focus-within:text-accent">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            required
+            rows="4"
+            class="w-full bg-surface-950/80 border border-surface-800 rounded-input px-4 py-3 text-sm text-surface-200 placeholder-surface-600/60 outline-none transition-all duration-base ease-expo-out focus:border-accent/60 focus:bg-surface-950 focus:shadow-[0_0_20px_-8px] focus:shadow-accent/20 resize-none"
+            placeholder="What's on your mind?"
+          ></textarea>
+        </div>
+
+        <div id="form-error" class="text-xs text-red-400/90 hidden text-center" role="alert"></div>
+
+        <button
+          type="submit"
+          id="submit-btn"
+          class="w-full rounded-input bg-surface-white text-surface-black font-medium px-6 py-3 text-sm border border-surface-white transition-all duration-base ease-expo-out hover:bg-accent hover:text-surface-white hover:border-accent hover:shadow-[0_0_24px_-8px] hover:shadow-accent/40 active:scale-[0.98]"
+        >
+          Send Message
+        </button>
+
+        <div id="form-success" class="hidden">
+          <div class="flex items-center justify-center gap-2 text-sm text-surface-400">
+            <span class="text-accent text-base">&#10003;</span>
+            Thanks! I'll get back to you soon.
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
   <script>
     import { animate, inView } from 'motion';
 
     const initReveal = () => {
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      const card = document.querySelector('[data-reveal="contact-card"]') as HTMLElement | null;
-      if (card) {
-        if (prefersReducedMotion) {
-          card.style.opacity = '1';
-          card.style.transform = 'none';
-        } else {
-          inView(
-            card,
-            () => {
-              (animate as any)(
-                card,
-                { opacity: [0, 1], y: [24, 0] },
-                { duration: 0.6, delay: 0, easing: [0.16, 1, 0.3, 1] }
-              );
-            },
-            { threshold: 0.15 } as any
-          );
-        }
+      const cards = document.querySelectorAll('[data-reveal]') as NodeListOf<HTMLElement>;
+
+      if (prefersReducedMotion) {
+        cards.forEach((el) => {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        });
+        return;
       }
+
+      cards.forEach((el, i) => {
+        inView(
+          el,
+          () => {
+            (animate as any)(
+              el,
+              { opacity: [0, 1], y: [24, 0] },
+              { duration: 0.6, delay: 0, easing: [0.16, 1, 0.3, 1] }
+            );
+          },
+          { threshold: 0.15 } as any
+        );
+      });
     };
 
     const runInit = () => {
@@ -105,21 +143,45 @@
   </script>
 
   <script>
-    const emailLink = document.getElementById('email-link');
-    
-    if (emailLink) {
-      emailLink.addEventListener('click', async () => {
-        const originalText = emailLink.textContent || '';
-        
+    const form = document.getElementById('contact-form') as HTMLFormElement | null;
+    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+    const formError = document.getElementById('form-error') as HTMLElement | null;
+    const formSuccess = document.getElementById('form-success') as HTMLElement | null;
+
+    if (form && submitBtn && formError && formSuccess) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        formError.classList.add('hidden');
+        formSuccess.classList.add('hidden');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending\u2026';
+
+        const formData = new FormData(form);
+
         try {
-          await navigator.clipboard.writeText(originalText);
-          emailLink.textContent = 'Copied ✓';
-          
-          setTimeout(() => {
-            emailLink.textContent = originalText;
-          }, 2000);
-        } catch (err) {
-          // Silent fail - clipboard API may not be available without HTTPS
+          const res = await fetch('/api/contact', {
+            method: 'POST',
+            body: formData,
+          });
+
+          const data = await res.json();
+
+          if (res.ok && data.success) {
+            form.reset();
+            form.classList.add('hidden');
+            formSuccess.classList.remove('hidden');
+          } else {
+            formError.textContent = data.error || 'Something went wrong.';
+            formError.classList.remove('hidden');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Message';
+          }
+        } catch {
+          formError.textContent = 'Network error. Please try again.';
+          formError.classList.remove('hidden');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
         }
       });
     }

@@ -8,7 +8,7 @@ const sortedProjects = allProjects.sort((a, b) => (a.data.order || 0) - (b.data.
 const featuredProject = sortedProjects.find((p) => p.data.featured) || sortedProjects[0];
 const remainingProjects = sortedProjects.filter((p) => p !== featuredProject);
 
-const nextOrder = sortedProjects.length > 0 ? Math.max(...sortedProjects.map((p) => p.data.order || 0), 0) + 1 : 1;
+
 ---
 
 <style>
@@ -34,7 +34,7 @@ const nextOrder = sortedProjects.length > 0 ? Math.max(...sortedProjects.map((p)
       </h2>
     </div>
     <p class="text-sm text-surface-600 max-w-xs text-right">
-      A focused set of work — built with intention, shipped with care.
+      A focused set of work built with intention, shipped with care.
     </p>
   </div>
 
@@ -51,10 +51,9 @@ const nextOrder = sortedProjects.length > 0 ? Math.max(...sortedProjects.map((p)
 
     <!-- Coming Soon Card -->
     <div
-      class="min-h-[200px] flex flex-col items-center justify-center rounded-card border border-dashed border-surface-800"
+      class="min-h-[200px] flex items-center justify-center rounded-card border border-dashed border-surface-800"
     >
-      <span class="text-sm text-surface-400 mb-1">More coming soon</span>
-      <span class="text-xs text-surface-400">Currently building #{nextOrder}</span>
+      <span class="text-sm text-surface-400">More coming soon</span>
     </div>
   </div>
 

@@ -5,10 +5,12 @@ import tailwindcss from '@tailwindcss/vite';
 import icon from 'astro-icon';
 
 import sitemap from '@astrojs/sitemap';
+import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://aemine.vercel.app',
+  adapter: vercel(),
   integrations: [icon(), sitemap()],
   vite: {
     plugins: [tailwindcss()]

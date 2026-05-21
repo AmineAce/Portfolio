@@ -1,0 +1,19 @@
+---
+export interface Props {
+  href?: string;
+  size?: 'sm' | 'xs';
+  muted?: boolean;
+}
+
+const { href, size = 'sm', muted = false } = Astro.props;
+const textSize = size === 'xs' ? 'text-xs' : 'text-sm';
+const textColor = muted ? 'text-surface-400' : 'text-surface-50';
+const Tag = href ? 'a' : 'span';
+---
+
+<Tag
+  href={href}
+  class={`font-sans ${textSize} font-medium ${textColor}`}
+>
+  AE<span class="text-accent">.</span>
+</Tag>

@@ -5,24 +5,15 @@
   }
 </style>
 
-<section id="hero" class="flex min-h-screen flex-col justify-center px-6 pt-16">
+<section id="hero" class="flex min-h-[80vh] flex-col justify-center px-6 pt-16">
   <!-- Center container matching navbar max-width -->
   <div class="mx-auto w-full max-w-[1100px]">
-    <!-- Availability Badge -->
-    <span
-      data-hero-element="badge"
-      class="inline-flex items-center gap-2 rounded-pill border border-surface-800 bg-surface-900 px-4 py-1.5 text-xs text-surface-400"
-    >
-      <span class="h-2 w-2 rounded-full bg-green-500"></span>
-      Available for freelance &middot; 2026
-    </span>
-
     <!-- Name Heading -->
     <h1
       data-hero-element="name"
-      class="mt-6 font-serif italic text-surface-white text-6xl leading-tight tracking-tighter lg:text-7xl"
+      class="font-serif italic text-surface-white text-6xl leading-tight tracking-tighter lg:text-7xl"
     >
-      Amine
+      Amine E.
     </h1>
 
     <!-- Role / Title (decorative, not a heading) -->
@@ -43,25 +34,34 @@
     </p>
 
     <!-- CTA Button Row -->
-    <div data-hero-element="cta" class="mb-16 flex flex-wrap gap-3">
+    <div data-hero-element="cta" class="mb-8 flex flex-wrap gap-3">
       <a
         href="#work"
-        class="rounded-input bg-surface-50 text-surface-black font-medium px-6 py-3 text-sm hover:bg-surface-white transition-colors duration-micro"
+        class="rounded-input bg-white text-black font-medium px-6 py-3 text-sm border border-white hover:border-accent hover:text-accent transition-colors duration-micro"
       >
         View Work
       </a>
       <a
         href="#contact"
-        class="rounded-input border border-surface-700 px-6 py-3 text-sm text-surface-300 hover:border-surface-500 hover:text-surface-100 transition-colors duration-micro"
+        class="rounded-input border border-surface-700 px-6 py-3 text-sm text-surface-300 hover:border-accent hover:text-accent transition-colors duration-micro"
       >
         Get in Touch
       </a>
     </div>
 
+    <!-- Availability Badge -->
+    <span
+      data-hero-element="badge"
+      class="inline-flex items-center gap-2 rounded-pill border border-surface-800 bg-surface-900 px-4 py-1.5 text-xs text-surface-400 mt-8"
+    >
+      <span class="h-2 w-2 rounded-full bg-green-500"></span>
+      Available for freelance &middot; 2026
+    </span>
+
     <!-- Stats Row -->
     <div data-hero-element="stats" class="flex gap-10 border-t border-surface-900 pt-10 mt-10">
       <div>
-        <span class="text-2xl font-medium tracking-tight text-surface-white">2+</span>
+        <span class="text-2xl font-medium tracking-tight text-surface-white">1+</span>
         <div class="mt-1 text-xs text-surface-400">Years building</div>
       </div>
       <div>
@@ -76,19 +76,11 @@
   </div>
 </section>
 
-<!-- Cursor Follower -->
-<div
-  id="cursor-follower"
-  aria-hidden="true"
-  class="fixed pointer-events-none w-10 h-10 rounded-full bg-accent/10 z-50 transform -translate-x-1/2 -translate-y-1/2"
-></div>
-
 <script>
   import { animate } from 'motion';
 
   document.addEventListener('DOMContentLoaded', () => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const cursor = document.getElementById('cursor-follower') as HTMLElement | null;
 
     const animationSequence = [
       { selector: '[data-hero-element="badge"]', delay: 0 },
@@ -123,11 +115,8 @@
     // --- Cursor Follower ---
     if (cursor) {
       const onMouseMove = (e: MouseEvent) => {
-        (animate as any)(
-          cursor,
-          { x: e.clientX, y: e.clientY },
-          { duration: 0.08, easing: 'linear' }
-        );
+        cursor.style.left = `${e.clientX - 20}px`;
+        cursor.style.top = `${e.clientY - 20}px`;
       };
 
       const onTouchStart = () => {
