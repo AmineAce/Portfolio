@@ -38,6 +38,14 @@
       </div>
 
       <form id="contact-form" class="text-left space-y-5">
+        <input
+          type="text"
+          name="website"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+          class="absolute -left-[9999px] top-0 h-0 w-0 opacity-0 pointer-events-none overflow-hidden"
+        />
         <div class="group">
           <label for="name" class="block text-xs text-surface-500 tracking-widest uppercase mb-2 transition-colors duration-micro group-focus-within:text-accent">Name</label>
           <input
@@ -118,7 +126,7 @@
             (animate as any)(
               el,
               { opacity: [0, 1], y: [24, 0] },
-              { duration: 0.6, delay: 0, easing: [0.16, 1, 0.3, 1] }
+              { duration: 0.6, delay: i * 0.1, easing: [0.16, 1, 0.3, 1] }
             );
           },
           { threshold: 0.15 } as any
