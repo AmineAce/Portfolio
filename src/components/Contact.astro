@@ -150,48 +150,5 @@
     document.addEventListener('astro:page-load', runInit);
   </script>
 
-  <script>
-    const form = document.getElementById('contact-form') as HTMLFormElement | null;
-    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
-    const formError = document.getElementById('form-error') as HTMLElement | null;
-    const formSuccess = document.getElementById('form-success') as HTMLElement | null;
-
-    if (form && submitBtn && formError && formSuccess) {
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        formError.classList.add('hidden');
-        formSuccess.classList.add('hidden');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending\u2026';
-
-        const formData = new FormData(form);
-
-        try {
-          const res = await fetch('/api/contact', {
-            method: 'POST',
-            body: formData,
-          });
-
-          const data = await res.json();
-
-          if (res.ok && data.success) {
-            form.reset();
-            form.classList.add('hidden');
-            formSuccess.classList.remove('hidden');
-          } else {
-            formError.textContent = data.error || 'Something went wrong.';
-            formError.classList.remove('hidden');
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Send Message';
-          }
-        } catch {
-          formError.textContent = 'Network error. Please try again.';
-          formError.classList.remove('hidden');
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Send Message';
-        }
-      });
-    }
-  </script>
+  <script is:inline src="/scripts/contact-form.js"></script>
 </section>

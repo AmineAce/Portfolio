@@ -69,31 +69,6 @@ const structuredData = {
     </main>
     <Footer />
 
-    <script>
-      (() => {
-        let ticking = false;
-
-        window.addEventListener('scroll', () => {
-          if (!ticking) {
-            requestAnimationFrame(() => {
-              const scrollTop = window.scrollY;
-              const docHeight = document.documentElement.scrollHeight;
-              const winHeight = window.innerHeight;
-              const scrollable = docHeight - winHeight;
-              const progress = scrollable > 0 ? (scrollTop / scrollable) * 100 : 0;
-              document.documentElement.style.setProperty('--scroll-progress', progress + '%');
-
-              const scrollBar = document.getElementById('scroll-bar');
-              if (scrollBar) {
-                scrollBar.setAttribute('aria-valuenow', Math.round(progress).toString());
-              }
-
-              ticking = false;
-            });
-            ticking = true;
-          }
-        });
-      })();
-    </script>
+    <script is:inline src="/scripts/scroll-progress.js"></script>
   </body>
 </html>
