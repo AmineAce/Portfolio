@@ -116,6 +116,7 @@ const caseStudyUrl = slug ? `/work/${slug}` : undefined;
         {caseStudyUrl && (
           <a
             href={caseStudyUrl}
+            aria-label={`Read case study: ${title}`}
             class="px-3 py-1 rounded-input border border-surface-800 text-surface-400 hover:border-accent hover:text-accent transition-colors duration-base ease-expo-out text-sm"
           >
             Read
@@ -125,6 +126,7 @@ const caseStudyUrl = slug ? `/work/${slug}` : undefined;
           <a
             href={githubUrl}
             target="_blank"
+            aria-label={`${title} source code on GitHub`}
             class="px-3 py-1 rounded-input border border-surface-800 text-surface-400 hover:border-accent hover:text-accent transition-colors duration-base ease-expo-out text-sm"
           >
             Github
@@ -134,6 +136,7 @@ const caseStudyUrl = slug ? `/work/${slug}` : undefined;
           <a
             href={liveUrl}
             target="_blank"
+            aria-label={`${title} live website`}
             class="px-3 py-1 rounded-input border border-surface-800 text-surface-400 hover:border-accent hover:text-accent transition-colors duration-base ease-expo-out text-sm"
           >
             Live site

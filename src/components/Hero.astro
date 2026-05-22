@@ -19,7 +19,7 @@
     <!-- Role / Title (decorative, not a heading) -->
     <div
       data-hero-element="role"
-      class="font-sans font-medium text-surface-700 text-3xl leading-tight tracking-tighter lg:text-4xl mb-8"
+      class="font-sans font-medium text-surface-400 text-3xl leading-tight tracking-tighter lg:text-4xl mb-8"
     >
       Frontend Developer.
     </div>
@@ -110,26 +110,6 @@
           );
         }
       });
-    }
-
-    // --- Cursor Follower ---
-    if (cursor) {
-      const onMouseMove = (e: MouseEvent) => {
-        cursor.style.left = `${e.clientX - 20}px`;
-        cursor.style.top = `${e.clientY - 20}px`;
-      };
-
-      const onTouchStart = () => {
-        cursor.style.display = 'none';
-      };
-
-      const onMouseEnterAfterTouch = () => {
-        cursor.style.display = '';
-      };
-
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('touchstart', onTouchStart, { once: true });
-      document.addEventListener('mouseenter', onMouseEnterAfterTouch, { once: true });
     }
   });
 </script>
