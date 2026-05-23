@@ -1,6 +1,6 @@
 ---
 title: "AtlasGuards"
-description: "Secure digital release management for media professionals — capture legally-binding guest releases with biometric signatures, store them securely, and verify authenticity anytime."
+description: "Full stack SaaS built solo with Next.js, Supabase, and Paddle integration. Shipped in weeks."
 tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Supabase", "Paddle", "Redis"]
 year: 2025
 featured: true
@@ -22,4 +22,4 @@ I architected the complete stack including authentication with Supabase Auth, su
 
 ## What I Learned
 
-Building this taught me the complexity of subscription billing systems — handling webhooks, managing tiered pricing, and implementing pro-rated upgrades required careful state management. I also learned that security isn't optional: implementing RLS policies on every table, rate limiting signature submissions, and using secure HTTP-only cookies became non-negotiable best practices. The testing strategy (534 tests with Jest and Playwright) ensured the system could handle real-world user flows while maintaining reliability.
+Building this taught me the complexity of subscription billing systems handling webhooks, managing tiered pricing, and implementing pro-rated upgrades required careful state management. I also learned that security isn't optional: implementing RLS policies on every table, rate limiting signature submissions, and using secure HTTP-only cookies became non-negotiable best practices. The testing strategy (534 tests with Jest and Playwright) ensured the system could handle real-world user flows while maintaining reliability.
