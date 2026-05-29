@@ -3,6 +3,23 @@
     opacity: 0;
     transform: translateY(24px);
   }
+  #submit-spinner {
+    display: none;
+    width: 14px;
+    height: 14px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  #submit-spinner.active {
+    display: inline-block;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
 </style>
 
 <section id="contact" class="max-w-[1100px] mx-auto px-6 py-24">
@@ -28,6 +45,7 @@
 
   <div data-reveal="contact-card" class="bg-surface-900 border border-surface-800 rounded-card overflow-hidden relative max-w-[500px] mx-auto">
     <div class="relative min-h-[600px] flex flex-col justify-center px-6">
+      <div id="contact-form-container">
       <div class="text-center mb-8">
         <h2 class="font-serif italic text-3xl md:text-4xl text-surface-white tracking-tight leading-tight mb-3">
           Let's work together.
@@ -89,66 +107,100 @@
           id="submit-btn"
           class="w-full rounded-input bg-surface-white text-surface-black font-medium px-6 py-3 text-sm border border-surface-white transition-all duration-base ease-expo-out hover:bg-accent hover:text-surface-white hover:border-accent hover:shadow-[0_0_24px_-8px] hover:shadow-accent/40 active:scale-[0.98]"
         >
-          Send me your idea
+          <span id="submit-text">Send me your idea</span>
+          <span id="submit-spinner"></span>
         </button>
       </form>
-
-      <div id="form-success" class="hidden">
-        <div class="flex items-center justify-center gap-2 text-sm text-surface-400">
-          <span class="text-accent text-base">&#10003;</span>
-          Thanks! I'll get back to you soon.
-        </div>
       </div>
+  
+        <div id="form-success" class="hidden flex flex-col items-center justify-center flex-1 min-h-[300px]">
+          <span class="text-accent text-3xl block mb-4">&#10003;</span>
+          <p class="text-surface-200 text-lg font-medium mb-2">Message sent!</p>
+          <p class="text-surface-400 text-sm mb-8">Thanks, I'll be in touch soon.</p>
+          <button id="resend-btn" type="button" class="rounded-input border border-surface-700 px-6 py-3 text-sm text-surface-300 hover:border-accent hover:text-accent transition-colors duration-base">
+          Send another message
+          </button>
+        </div>
 
     </div>
   </div>
 
   <script>
-    import { animate, inView } from 'motion';
+    import { setupReveal } from '../utils/reveal';
+      import { showToast } from '../utils/toast';
+  
+      setupReveal({
+        steps: [
+          { selector: '[data-reveal]', y: 24, duration: 0.6, stagger: 0.1, threshold: 0.15 },
+        ],
+      }, 'contact');
+    
+      // --- Form handling ---
+  
+        const form = document.getElementById('contact-form');
+        const submitBtn = document.getElementById('submit-btn');
+    const submitText = document.getElementById('submit-text');
+    const submitSpinner = document.getElementById('submit-spinner');
+    const formSuccess = document.getElementById('form-success');
+    const resendBtn = document.getElementById('resend-btn');
+      const contactFormContainer = document.getElementById('contact-form-container');
+  
+      if (form && submitBtn && formSuccess) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+  
+        formSuccess.classList.add('hidden');
+        submitBtn.disabled = true;
+        submitText.textContent = 'Sending';
+        submitSpinner.classList.add('active');
 
-    const initReveal = () => {
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      const cards = document.querySelectorAll('[data-reveal]') as NodeListOf<HTMLElement>;
-
-      if (prefersReducedMotion) {
-        cards.forEach((el) => {
-          el.style.opacity = '1';
-          el.style.transform = 'none';
+        const formData = new FormData(form);
+  
+          try {
+            const res = await fetch('/api/contact', {
+            method: 'POST',
+            body: formData,
+            });
+  
+            let data;
+          try {
+              data = await res.json();
+            } catch {
+              showToast('Server error. Please try again later.');
+              submitBtn.disabled = false;
+              submitText.textContent = 'Send me your idea';
+              submitSpinner.classList.remove('active');
+              return;
+            }
+  
+            if (res.ok && data.success) {
+            form.reset();
+              contactFormContainer.classList.add('hidden');
+              formSuccess.classList.remove('hidden');
+            } else {
+              showToast(data.error || 'Something went wrong.');
+              submitBtn.disabled = false;
+              submitText.textContent = 'Send me your idea';
+            submitSpinner.classList.remove('active');
+            }
+          } catch (_) {
+          showToast('Connection error. Check your internet and try again.');
+            submitBtn.disabled = false;
+          submitText.textContent = 'Send me your idea';
+          submitSpinner.classList.remove('active');
+          }
         });
-        return;
       }
 
-      cards.forEach((el, i) => {
-        inView(
-          el,
-          () => {
-            (animate as any)(
-              el,
-              { opacity: [0, 1], y: [24, 0] },
-              { duration: 0.6, delay: i * 0.1, easing: [0.16, 1, 0.3, 1] }
-            );
-          },
-          { threshold: 0.15 } as any
-        );
+    if (resendBtn) {
+      resendBtn.addEventListener('click', () => {
+        formSuccess.classList.add('hidden');
+        contactFormContainer.classList.remove('hidden');
+        form.reset();
+        submitBtn.disabled = false;
+        submitText.textContent = 'Send me your idea';
+        submitSpinner.classList.remove('active');
       });
-    };
-
-    const runInit = () => {
-      if (!(window as any).__contactRevealInitialized) {
-        (window as any).__contactRevealInitialized = true;
-        initReveal();
-      }
-    };
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', runInit);
-    } else {
-      runInit();
     }
-
-    document.addEventListener('astro:page-load', runInit);
   </script>
-
-  <script is:inline src="/scripts/contact-form.js"></script>
 </section>

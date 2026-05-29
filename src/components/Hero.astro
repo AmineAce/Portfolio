@@ -68,38 +68,15 @@
 </section>
 
 <script>
-  import { animate } from 'motion';
+  import { setupReveal } from '../utils/reveal';
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const animationSequence = [
-      { selector: '[data-hero-element="badge"]', delay: 0 },
-      { selector: '[data-hero-element="name"]', delay: 0.08 },
-      { selector: '[data-hero-element="role"]', delay: 0.16 },
-      { selector: '[data-hero-element="cta"]', delay: 0.24 },
-      { selector: '[data-hero-element="stats"]', delay: 0.45 },
-    ];
-
-    if (prefersReducedMotion) {
-      animationSequence.forEach(({ selector }) => {
-        const el = document.querySelector(selector) as HTMLElement | null;
-        if (el) {
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }
-      });
-    } else {
-      animationSequence.forEach(({ selector, delay }) => {
-        const el = document.querySelector(selector) as HTMLElement | null;
-        if (el) {
-          (animate as any)(
-            el,
-            { opacity: [0, 1], y: [20, 0] },
-            { duration: 0.6, delay, easing: [0.16, 1, 0.3, 1] }
-          );
-        }
-      });
-    }
-  });
-</script>
+  setupReveal({
+    steps: [
+        { selector: '[data-hero-element="badge"]', delay: 0, mode: 'immediate', y: 20, duration: 0.6 },
+        { selector: '[data-hero-element="name"]', delay: 0.08, mode: 'immediate', y: 20, duration: 0.6 },
+      { selector: '[data-hero-element="role"]', delay: 0.16, mode: 'immediate', y: 20, duration: 0.6 },
+      { selector: '[data-hero-element="cta"]', delay: 0.24, mode: 'immediate', y: 20, duration: 0.6 },
+      { selector: '[data-hero-element="stats"]', delay: 0.45, mode: 'immediate', y: 20, duration: 0.6 },
+      ],
+    }, 'hero');
+  </script>

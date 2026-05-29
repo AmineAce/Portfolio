@@ -17,10 +17,9 @@ interface ProjectData {
 
 interface Props {
   entry?: CollectionEntry<'projects'> | ProjectData;
-  featured?: boolean;
-}
+  }
 
-const { entry, featured = false } = Astro.props;
+const { entry } = Astro.props;
 
 // Extract data safely: support full CollectionEntry or plain data object
 const data: ProjectData = entry && 'data' in entry ? entry.data : (entry as ProjectData) || {};
@@ -31,7 +30,6 @@ const {
   tags = [],
   liveUrl,
   githubUrl,
-  order,
   image,
 } = data;
 
@@ -47,7 +45,7 @@ const caseStudyUrl = slug ? `/work/${slug}` : undefined;
   class="group relative flex h-full flex-col overflow-hidden rounded-card border border-surface-800 bg-surface-900 transition-colors duration-base ease-expo-out"
 >
   <!-- Card Image Area -->
-  <div class={featured ? 'h-[260px]' : 'h-[160px]'} style="background-color: var(--color-surface-950);">
+  <div class="h-[180px]" style="background-color: var(--color-surface-950);">
     {image ? (
       <div class="w-full h-full p-3">
         <div class="w-full h-full rounded-card overflow-hidden bg-surface-950">
@@ -80,28 +78,20 @@ const caseStudyUrl = slug ? `/work/${slug}` : undefined;
     <!-- Metadata Row -->
     <div class="flex justify-start items-center mb-3">
       <div class="flex flex-wrap gap-1.5">
-        {tags.map((tag, index) => (
+        {tags.map((tag) => (
           <span
-            class={
-              index === 0
-                ? 'px-3 py-1 rounded-pill text-xs bg-accent-dim text-accent-ondark border border-accent/30'
-                : 'px-3 py-1 rounded-pill text-xs bg-surface-900 text-surface-400 border border-surface-800'
-            }
-          >
-            {tag}
-          </span>
-        ))}
+            class="px-3 py-1 rounded-pill text-xs bg-surface-900 text-surface-400 border border-surface-800"
+            >
+              {tag}
+            </span>
+          ))}
       </div>
     </div>
 
     <!-- Title -->
     <h3
-      class={
-        featured
-          ? 'text-xl font-medium tracking-tight text-surface-200 leading-snug mb-2'
-          : 'text-lg font-medium tracking-tight text-surface-200 leading-snug mb-2'
-      }
-    >
+      class="text-lg font-medium tracking-tight text-surface-200 leading-snug mb-2"
+      >
       {title}
     </h3>
 

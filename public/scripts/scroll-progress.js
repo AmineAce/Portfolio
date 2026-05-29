@@ -8,12 +8,12 @@
         var docHeight = document.documentElement.scrollHeight;
         var winHeight = window.innerHeight;
         var scrollable = docHeight - winHeight;
-        var progress = scrollable > 0 ? (scrollTop / scrollable) * 100 : 0;
-        document.documentElement.style.setProperty('--scroll-progress', progress + '%');
-
-        var scrollBar = document.getElementById('scroll-bar');
+        var progress = scrollable > 0 ? (scrollTop / scrollable) : 0;
+  
+          var scrollBar = document.getElementById('scroll-bar');
         if (scrollBar) {
-          scrollBar.setAttribute('aria-valuenow', Math.round(progress).toString());
+            scrollBar.style.transform = 'scaleX(' + progress + ')';
+          scrollBar.setAttribute('aria-valuenow', Math.round(progress * 100).toString());
         }
 
         ticking = false;

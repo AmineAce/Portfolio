@@ -91,69 +91,13 @@
   </div>
 
   <script>
-    import { animate, inView } from 'motion';
+    import { setupReveal } from '../utils/reveal';
 
-    const initReveal = () => {
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      const header = document.querySelector('[data-reveal="about-header"]') as HTMLElement | null;
-      if (header) {
-        if (prefersReducedMotion) {
-          header.style.opacity = '1';
-          header.style.transform = 'none';
-        } else {
-          inView(
-            header,
-            () => {
-              (animate as any)(
-                header,
-                { opacity: [0, 1], y: [16, 0] },
-                { duration: 0.5, delay: 0, easing: [0.16, 1, 0.3, 1] }
-              );
-            },
-            { threshold: 0.2 } as any
-          );
-        }
-      }
-
-      const cards = Array.from(document.querySelectorAll('[data-reveal="about-card"]')) as HTMLElement[];
-
-      if (prefersReducedMotion) {
-        cards.forEach((card) => {
-          card.style.opacity = '1';
-          card.style.transform = 'none';
-        });
-        return;
-      }
-
-      cards.forEach((card, index) => {
-        inView(
-          card,
-          () => {
-            (animate as any)(
-              card,
-              { opacity: [0, 1], y: [24, 0] },
-              { duration: 0.55, delay: index * 0.08, easing: [0.16, 1, 0.3, 1] }
-            );
-          },
-          { threshold: 0.1 } as any
-        );
-      });
-    };
-
-    const runInit = () => {
-      if (!(window as any).__aboutRevealInitialized) {
-        (window as any).__aboutRevealInitialized = true;
-        initReveal();
-      }
-    };
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', runInit);
-    } else {
-      runInit();
-    }
-
-    document.addEventListener('astro:page-load', runInit);
+    setupReveal({
+      steps: [
+        { selector: '[data-reveal="about-header"]', y: 16, duration: 0.5, stagger: 0, threshold: 0.2 },
+      { selector: '[data-reveal="about-card"]', y: 24, duration: 0.55, stagger: 0.08, threshold: 0.1 },
+      ],
+    }, 'about');
   </script>
 </section>

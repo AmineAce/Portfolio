@@ -25,17 +25,14 @@
 }
 
 @layer base {
-  :root {
-    --scroll-progress: 0%;
-  }
-
   #scroll-bar {
     position: fixed;
-    top: 0;
-    left: 0;
-    height: 2px;
-    width: var(--scroll-progress);
+      top: 0;
+      left: 0;
+      height: 2px;
+    width: 100%;
+    transform-origin: left center;
     background-color: #6366f1;
     z-index: 9999;
+    }
   }
-}
