@@ -3,9 +3,13 @@ import Brand from './Brand.astro';
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-surface-900 py-8 mt-0">
-  <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+<footer class="border-t border-surface-900 py-10">
+  <div class="max-w-[1100px] mx-auto px-6 flex justify-between items-center">
     <Brand size="xs" muted />
-    <span class="text-xs text-surface-400">Built with Astro · {year}</span>
+    <div class="flex items-center gap-4 text-xs text-surface-600">
+      <a href="https://github.com/AmineAce" target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">GitHub</a>
+      <span aria-hidden="true">&middot;</span>
+      <span>Built with Astro &middot; {year}</span>
+    </div>
   </div>
 </footer>

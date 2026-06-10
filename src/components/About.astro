@@ -1,4 +1,5 @@
 ---
+import { Icon } from 'astro-icon/components';
 ---
 
 <style>
@@ -25,25 +26,25 @@
           Who I am
         </div>
         <h3 class="font-serif italic text-2xl text-surface-white leading-snug tracking-tight mb-6">
-          I am a tech builder.
+          I build for the web.
         </h3>
         <p class="text-surface-400 text-sm leading-relaxed">
-          I am web thinkerer, I love to explore AI capabilities and its limits, I build, debug, and ship. I spend my mornings designing web interfaces, and evenings obsessing over that split second that seperates 'it works' from 'its alive'.
+          Frontend developer focused on clean interfaces, thoughtful interactions, and code that ships. I explore the edges of what AI makes possible in development, then bring that back into real products — debugging and polishing until the experience feels alive.
         </p>
         <div class="flex-1"></div>
         <div class="pt-6 border-t border-surface-800 mt-6">
-          <div class="text-xs text-surface-400 tracking-widest uppercase mb-3">
+          <div class="text-xs text-surface-500 tracking-widest uppercase mb-3">
             Current stack
           </div>
           <div class="flex flex-wrap gap-2">
             <span class="px-3 py-1 rounded-pill text-xs bg-accent/5 border border-accent/30 text-accent-ondark">Astro</span>
             <span class="px-3 py-1 rounded-pill text-xs bg-accent/5 border border-accent/30 text-accent-ondark">TypeScript</span>
             <span class="px-3 py-1 rounded-pill text-xs bg-accent/5 border border-accent/30 text-accent-ondark">React</span>
-            <span class="px-3 py-1 rounded-pill text-xs bg-surface-900 border border-surface-800 text-surface-400">Tailwind CSS</span>
-            <span class="px-3 py-1 rounded-pill text-xs bg-surface-900 border border-surface-800 text-surface-400">Figma</span>
-            <span class="px-3 py-1 rounded-pill text-xs bg-surface-900 border border-surface-800 text-surface-400">Motion One</span>
-            <span class="px-3 py-1 rounded-pill text-xs bg-surface-900 border border-surface-800 text-surface-400">Git</span>
-            <span class="px-3 py-1 rounded-pill text-xs bg-surface-900 border border-surface-800 text-surface-400">Vercel</span>
+            <span class="px-3 py-1 rounded-pill text-xs bg-surface-800 text-surface-400">Tailwind CSS</span>
+            <span class="px-3 py-1 rounded-pill text-xs bg-surface-800 text-surface-400">Figma</span>
+            <span class="px-3 py-1 rounded-pill text-xs bg-surface-800 text-surface-400">Motion One</span>
+            <span class="px-3 py-1 rounded-pill text-xs bg-surface-800 text-surface-400">Git</span>
+            <span class="px-3 py-1 rounded-pill text-xs bg-surface-800 text-surface-400">Vercel</span>
           </div>
         </div>
       </div>
@@ -51,40 +52,49 @@
 
     <div class="md:col-span-2 flex flex-col gap-4">
       <div data-reveal="about-card" class="bg-surface-900 border border-surface-800 rounded-card p-5">
-        <span aria-hidden="true" class="text-lg mb-3 block">🌍</span>
-        <div class="text-xs text-surface-400 tracking-widest uppercase mb-1">
+        <div class="text-accent-ondark mb-3">
+          <Icon name="tabler:map-pin" size="20" />
+        </div>
+        <div class="text-xs text-surface-500 tracking-widest uppercase mb-1">
           Location
         </div>
         <div class="text-sm text-surface-300">
-          Morocco · Remote worldwide
-        </div>
-      </div>
-
-      <div data-reveal="about-card" class="bg-surface-900 border-l-2 border-l-accent border-t-surface-800 border-r-surface-800 border-b-surface-800 rounded-card p-5">
-        <div class="text-xs text-accent-ondark tracking-widest uppercase mb-4">
-          Currently
-        </div>
-        <div class="flex items-center gap-2 py-2 border-b border-surface-800">
-          <div class="w-[5px] h-[5px] rounded-full bg-accent flex-shrink-0"></div>
-          <span class="text-xs text-surface-400">Building my future</span>
-        </div>
-        <div class="flex items-center gap-2 py-2 border-b border-surface-800">
-          <div class="w-[5px] h-[5px] rounded-full bg-accent flex-shrink-0"></div>
-          <span class="text-xs text-surface-400">Learning UI design and animations</span>
-        </div>
-        <div class="flex items-center gap-2 py-2">
-          <div class="w-[5px] h-[5px] rounded-full bg-accent flex-shrink-0"></div>
-          <span class="text-xs text-surface-400">Open to new opportunities</span>
+          Morocco &middot; Remote worldwide
         </div>
       </div>
 
       <div data-reveal="about-card" class="bg-surface-900 border border-surface-800 rounded-card p-5">
-        <span aria-hidden="true" class="text-lg mb-3 block">🎓</span>
-        <div class="text-xs text-surface-400 tracking-widest uppercase mb-1">
+        <div class="text-accent-ondark mb-3">
+          <Icon name="tabler:code" size="20" />
+        </div>
+        <div class="text-xs text-surface-500 tracking-widest uppercase mb-1">
+          Currently
+        </div>
+        <ul class="space-y-2 mt-3">
+          <li class="flex items-center gap-2.5 text-xs text-surface-400">
+            <span class="w-1 h-1 rounded-full bg-accent shrink-0"></span>
+            Building a SaaS platform for media professionals
+          </li>
+          <li class="flex items-center gap-2.5 text-xs text-surface-400">
+            <span class="w-1 h-1 rounded-full bg-accent shrink-0"></span>
+            Deepening my design & animation craft
+          </li>
+          <li class="flex items-center gap-2.5 text-xs text-surface-400">
+            <span class="w-1 h-1 rounded-full bg-accent shrink-0"></span>
+            Open to new opportunities
+          </li>
+        </ul>
+      </div>
+
+      <div data-reveal="about-card" class="bg-surface-900 border border-surface-800 rounded-card p-5">
+        <div class="text-accent-ondark mb-3">
+          <Icon name="tabler:book" size="20" />
+        </div>
+        <div class="text-xs text-surface-500 tracking-widest uppercase mb-1">
           Background
         </div>
-        <div class="text-sm text-surface-300">
-          Self-taught Front-End Developer · B.A in English · TESOL diploma
+        <div class="text-sm text-surface-300 leading-relaxed">
+          Self-taught frontend dev &middot; B.A. in English &middot; TESOL diploma
         </div>
       </div>
     </div>
@@ -96,7 +106,7 @@
     setupReveal({
       steps: [
         { selector: '[data-reveal="about-header"]', y: 16, duration: 0.5, stagger: 0, threshold: 0.2 },
-      { selector: '[data-reveal="about-card"]', y: 24, duration: 0.55, stagger: 0.08, threshold: 0.1 },
+        { selector: '[data-reveal="about-card"]', y: 24, duration: 0.55, stagger: 0.08, threshold: 0.1 },
       ],
     }, 'about');
   </script>

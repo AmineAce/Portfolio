@@ -2,9 +2,9 @@
 import Brand from './Brand.astro';
 
 const navLinks = [
-  { label: 'Work', href: '#work' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Work', href: '/#work' },
+  { label: 'About', href: '/#about' },
+  { label: 'Contact', href: '/#contact' },
 ];
 ---
 
@@ -18,28 +18,30 @@ const navLinks = [
   [data-menu-open] [data-bar="3"] {
     transform: translateY(-5.5px) rotate(-45deg);
   }
+  #navbar.scrolled {
+    background: oklch(7% 0.02 270 / 0.85);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    border-bottom: 1px solid oklch(20% 0.02 270 / 0.6);
+  }
 </style>
 
-<nav id="navbar" class="fixed top-0 w-full z-50 bg-transparent transition-colors duration-base ease-expo-out">
-  <!-- Container -->
+<nav id="navbar" class="fixed top-0 w-full z-50 transition-colors duration-base ease-expo-out">
   <div class="relative mx-auto flex h-16 max-w-[1100px] items-center justify-between px-6">
-    <!-- Logo -->
     <Brand href="/" />
 
-    <!-- Desktop Pill Navigation -->
-    <div class="absolute left-1/2 hidden -translate-x-1/2 rounded-pill border border-surface-800 bg-surface-900 py-1.5 px-2 md:flex">
+    <div class="absolute left-1/2 hidden -translate-x-1/2 rounded-pill border border-surface-800/60 bg-surface-900/40 backdrop-blur-sm py-1.5 px-2 md:flex">
       {navLinks.map((link) => (
         <a
           href={link.href}
           data-nav-link
-          class="rounded-pill px-4 py-2 text-sm text-surface-400 hover:bg-accent/20 hover:text-accent transition-colors duration-base ease-expo-out"
+          class="rounded-pill px-4 py-2 text-sm text-surface-400 hover:bg-accent/15 hover:text-accent transition-colors duration-base ease-expo-out"
         >
           {link.label}
         </a>
       ))}
     </div>
 
-    <!-- Mobile Menu Toggle -->
     <button id="menu-toggle" class="flex flex-col items-center gap-1 md:hidden focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2" aria-label="Open navigation menu">
       <div data-bar="1" class="h-[1.5px] w-[18px] bg-surface-400 transition-all duration-base ease-expo-out"></div>
       <div data-bar="2" class="h-[1.5px] w-[18px] bg-surface-400 transition-all duration-base ease-expo-out"></div>
@@ -48,8 +50,7 @@ const navLinks = [
   </div>
 </nav>
 
-<!-- Mobile Menu Overlay -->
-<div id="mobile-menu" class="fixed inset-0 z-[60] hidden flex-col bg-surface-black">
+<div id="mobile-menu" class="fixed inset-0 z-[60] hidden flex-col bg-surface-black/95 backdrop-blur-xl">
   <div class="flex justify-end px-6 pt-6">
     <button id="menu-close" class="text-surface-400 text-2xl leading-none focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2" aria-label="Close navigation menu">&times;</button>
   </div>
@@ -83,9 +84,9 @@ const navLinks = [
       if (!navbar) return;
       var threshold = navbar.offsetHeight;
       if (window.scrollY > threshold) {
-        navbar.classList.add('bg-surface-black/80', 'backdrop-blur-md', 'border-b', 'border-surface-800');
+        navbar.classList.add('scrolled');
       } else {
-        navbar.classList.remove('bg-surface-black/80', 'backdrop-blur-md', 'border-b', 'border-surface-800');
+        navbar.classList.remove('scrolled');
       }
     }
 
@@ -93,13 +94,12 @@ const navLinks = [
     onScroll();
 
     function setActiveLink(activeLink) {
-      // Only track active state on desktop nav links, not mobile links
-        navLinks.forEach(function (link) {
-          link.classList.remove('bg-accent/20', 'text-accent');
+      navLinks.forEach(function (link) {
+        link.classList.remove('bg-accent/15', 'text-accent');
       });
-        if (activeLink) {
-          activeLink.classList.add('bg-accent/20', 'text-accent');
-        }
+      if (activeLink) {
+        activeLink.classList.add('bg-accent/15', 'text-accent');
+      }
     }
 
     var observer = new IntersectionObserver(
@@ -108,13 +108,13 @@ const navLinks = [
           var entry = entries[i];
           if (entry.isIntersecting) {
             var id = entry.target.id;
-            var link = document.querySelector('[data-nav-link][href="#' + id + '"]');
+            var link = document.querySelector('[data-nav-link][href$="#' + id + '"]');
             if (link) setActiveLink(link);
-            }
           }
-        },
-        { threshold: 0.6 }
-      );
+        }
+      },
+      { threshold: 0.6 }
+    );
 
     function observeSections() {
       sectionIds.forEach(function (id) {
@@ -133,9 +133,8 @@ const navLinks = [
       if (isMenuOpen) return;
       isMenuOpen = true;
 
-      // Clear any stale active state on mobile links
       mobileNavLinks.forEach(function (link) {
-        link.classList.remove('bg-accent/20', 'text-accent');
+        link.classList.remove('bg-accent/15', 'text-accent');
       });
 
       mobileMenu.classList.remove('hidden');
