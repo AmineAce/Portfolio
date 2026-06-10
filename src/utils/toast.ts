@@ -69,7 +69,7 @@ export function showToast(message: string, type: ToastType = 'error', duration =
 
   container.appendChild(toast);
 
-  animate(toast, { opacity: [0, 1], y: [-12, 0] }, { duration: 0.2, easing: [0.16, 1, 0.3, 1] });
+  (animate as any)(toast, { opacity: [0, 1], y: [-12, 0] }, { duration: 0.2, easing: [0.16, 1, 0.3, 1] });
 
   let timer = setTimeout(() => dismiss(toast), duration);
 
@@ -81,7 +81,7 @@ export function showToast(message: string, type: ToastType = 'error', duration =
 
 function dismiss(toast: HTMLElement) {
   if (!toast.isConnected) return;
-  animate(toast, { opacity: [1, 0], y: [0, -8] }, { duration: 0.15, easing: [0.16, 1, 0.3, 1] }).finished.then(() => {
+  (animate as any)(toast, { opacity: [1, 0], y: [0, -8] }, { duration: 0.15, easing: [0.16, 1, 0.3, 1] }).finished.then(() => {
     toast.remove();
   });
 }

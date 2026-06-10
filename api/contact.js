@@ -1,11 +1,13 @@
 import { Resend } from 'resend';
 
+// In-memory rate limit — best-effort on serverless. Vercel can scale to
+// concurrent instances, each with its own Map. For a portfolio contact form
+// this is acceptable; the origin check + honeypot handle the rest.
 const rateLimitStore = new Map();
 const MAX_REQUESTS = 3;
 const WINDOW_MS = 60 * 60 * 1000;
 const EMAIL_REGEX = /^(?!.*\.\.)(?!\.)(?!.*\.@)[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-let cleanupCounter = 0;
 
 function getClientIP(req) {
   const forwarded = req.headers['x-forwarded-for'];
@@ -50,14 +52,21 @@ export default async function handler(req, res) {
     return;
   }
 
-  cleanupCounter++;
-  if (cleanupCounter >= 10) {
-    cleanupCounter = 0;
-    const now = Date.now();
-    for (const [ip, entry] of rateLimitStore) {
-      if (entry.resetTime <= now) rateLimitStore.delete(ip);
+  const origin = req.headers['origin'];
+  const referer = req.headers['referer'];
+  if (origin || referer) {
+    const allowed = ['https://aemine.vercel.app', 'http://localhost:4321'];
+    const matchOrigin = origin && allowed.some((a) => origin === a);
+    const matchReferer = referer && allowed.some((a) => referer.startsWith(a));
+    if (!matchOrigin && !matchReferer) {
+      send(res, 403, { error: 'Forbidden.' });
+      return;
     }
   }
+
+    for (const [ip, entry] of rateLimitStore) {
+      if (entry.resetTime <= Date.now()) rateLimitStore.delete(ip);
+    }
 
   const ip = getClientIP(req);
   const now = Date.now();
@@ -139,4 +148,4 @@ export default async function handler(req, res) {
   } catch {
     send(res, 500, { error: 'Something went wrong. Please try again later.' });
   }
-}
+  }
