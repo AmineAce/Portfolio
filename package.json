@@ -14,12 +14,12 @@
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",
     "@iconify-json/tabler": "^1.2.35",
+    "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "astro": "^6.3.3",
     "astro-icon": "^1.1.5",
-    "motion": "^12.38.0",
     "resend": "^6.12.3",
     "tailwindcss": "^4.3.0"
   },
