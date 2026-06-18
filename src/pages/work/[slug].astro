@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -13,52 +14,129 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 
-const pageTitle = `${entry.data.title} | Amine`;
-const pageDescription = entry.data.description;
+const allProjects = await getCollection('projects');
+const sorted = allProjects.sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+const others = sorted.filter((p) => p.id !== entry.id).slice(0, 3);
+
+const { title, description, tags, year, featured, liveUrl, githubUrl, image } = entry.data;
+const pageTitle = `${title} | Amine`;
+const ogImage = image ? `https://aemine.vercel.app${image}` : undefined;
 ---
 
-<Base title={pageTitle} description={pageDescription}>
-  <main class="max-w-[1100px] mx-auto px-6 py-24">
-    <header class="mb-12">
-      <h1 class="text-4xl font-medium text-surface-200 tracking-tight mb-4">
-        {entry.data.title}
-      </h1>
-      <div class="flex flex-wrap gap-2 mb-4">
-        {entry.data.tags.map((tag: string) => (
-          <span class="px-3 py-1 rounded-pill text-xs bg-surface-900 text-surface-400 border border-surface-800">
-            {tag}
-          </span>
-        ))}
-      </div>
-      <p class="text-sm text-surface-600">
-        {entry.data.year} &middot; {entry.data.description}
-      </p>
-      <div class="flex gap-4 mt-4">
-        {entry.data.liveUrl && (
-          <a
-            href={entry.data.liveUrl}
-            target="_blank"
-            class="text-sm text-surface-400 hover:text-surface-200 transition-colors"
-          >
-            Live site ↗
-          </a>
-        )}
-        {entry.data.githubUrl && (
-          <a
-            href={entry.data.githubUrl}
-            target="_blank"
-            class="text-sm text-surface-400 hover:text-surface-200 transition-colors"
-          >
-            GitHub ↗
-          </a>
-        )}
-      </div>
-    </header>
+<Base title={pageTitle} description={description} ogImage={ogImage}>
+  <main>
+    <!-- Back nav -->
+    <div class="max-w-[1100px] mx-auto px-6 pt-24">
+      <a
+        href="/#work"
+        class="inline-flex items-center gap-1.5 text-sm text-surface-500 hover:text-accent transition-colors duration-micro active:scale-95"
+        >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="icon"
+        ><path d="M19 12H5" /><path d="m12 19-7-7 7-7" /></svg>
+        Back to projects
+      </a>
+    </div>
 
-    <hr class="border-surface-800 mb-12" />
+    <!-- Hero -->
+    <section class="relative max-w-[1100px] mx-auto px-6 py-12 overflow-hidden">
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
+        <div class="w-[600px] h-[300px] bg-accent/5 rounded-full blur-[100px]"></div>
+      </div>
 
-    <article class="prose prose-invert max-w-none">
-      <Content />
-    </article>
+      <div class="relative z-10">
+        {image && (
+          <div class="mb-8 rounded-card overflow-hidden border border-surface-800 bg-surface-950 shadow-lg">
+            <img src={image} alt={title} class="w-full h-auto object-cover" />
+          </div>
+        )}
+
+        <h1 class="font-serif italic text-surface-white text-5xl lg:text-6xl leading-tight tracking-tighter mb-4">
+          {title}
+        </h1>
+
+        <p class="font-sans text-surface-400 text-base leading-relaxed max-w-2xl mb-6">
+          {description}
+        </p>
+
+        <div class="flex flex-wrap gap-2 mb-6">
+          {tags.map((tag: string) => (
+            <span class="px-3 py-1 rounded-pill text-xs bg-surface-900 text-surface-400 border border-surface-800">
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <div class="flex items-center gap-4 text-sm text-surface-600 mb-8">
+          {year && <span>{year}</span>}
+          {featured && (
+            <span class="inline-flex items-center gap-1.5 rounded-pill border border-amber-500/20 bg-amber-500/10 px-3 py-0.5 text-xs text-amber-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="icon"
+              ><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+              Featured
+            </span>
+          )}
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          {liveUrl && (
+            <a
+              href={liveUrl}
+              target="_blank"
+               class="rounded-input bg-white text-black font-medium px-6 py-3 text-sm border border-white transition-all duration-micro hover:bg-accent hover:text-white hover:border-accent active:scale-95"
+            >
+              Live site ↗
+            </a>
+          )}
+          {githubUrl && (
+            <a
+              href={githubUrl}
+              target="_blank"
+               class="rounded-input border border-surface-700 px-6 py-3 text-sm text-surface-300 transition-all duration-micro hover:border-accent hover:text-accent hover:bg-accent/5 active:scale-95"
+            >
+              GitHub ↗
+            </a>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <!-- Article -->
+    <div class="max-w-[1100px] mx-auto px-6 pb-24">
+      <hr class="border-surface-800 mb-16" />
+
+      <article class="prose prose-invert max-w-3xl mx-auto">
+        <Content />
+      </article>
+
+      <!-- Other projects -->
+      {others.length > 0 && (
+        <section class="mt-24">
+          <h2 class="text-2xl font-medium text-surface-200 tracking-tight mb-8">Other projects</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {others.map((p) => <ProjectCard entry={p} />)}
+          </div>
+        </section>
+      )}
+    </div>
   </main>
 </Base>

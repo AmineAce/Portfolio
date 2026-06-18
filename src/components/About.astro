@@ -2,15 +2,8 @@
 import { Icon } from 'astro-icon/components';
 ---
 
-<style>
-  [data-reveal] {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-</style>
-
 <section id="about" class="max-w-[1100px] mx-auto px-6 py-24">
-  <div data-reveal="about-header" class="mb-16">
+  <div class="mb-16 reveal">
     <p class="text-xs text-accent-ondark font-medium tracking-widest uppercase mb-3">
       About Me
     </p>
@@ -20,8 +13,8 @@ import { Icon } from 'astro-icon/components';
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-    <div class="md:col-span-3" data-reveal="about-card">
-      <div class="bg-surface-900 border border-surface-800 rounded-card p-8 flex flex-col h-full">
+    <div class="md:col-span-3 reveal">
+      <div class="bg-surface-900/70 border border-surface-800 rounded-card p-8 flex flex-col h-full">
         <div class="text-xs text-accent-ondark tracking-widest uppercase mb-6">
           Who I am
         </div>
@@ -50,8 +43,8 @@ import { Icon } from 'astro-icon/components';
       </div>
     </div>
 
-    <div class="md:col-span-2 flex flex-col gap-4">
-      <div data-reveal="about-card" class="bg-surface-900 border border-surface-800 rounded-card p-5">
+    <div class="md:col-span-2 flex flex-col gap-4 reveal-stagger">
+      <div class="bg-surface-900/70 border border-surface-800 rounded-card p-5">
         <div class="text-accent-ondark mb-3">
           <Icon name="tabler:map-pin" size="20" />
         </div>
@@ -63,7 +56,7 @@ import { Icon } from 'astro-icon/components';
         </div>
       </div>
 
-      <div data-reveal="about-card" class="bg-surface-900 border border-surface-800 rounded-card p-5">
+      <div class="bg-surface-900/70 border border-surface-800 rounded-card p-5">
         <div class="text-accent-ondark mb-3">
           <Icon name="tabler:code" size="20" />
         </div>
@@ -86,7 +79,7 @@ import { Icon } from 'astro-icon/components';
         </ul>
       </div>
 
-      <div data-reveal="about-card" class="bg-surface-900 border border-surface-800 rounded-card p-5">
+      <div class="bg-surface-900/70 border border-surface-800 rounded-card p-5">
         <div class="text-accent-ondark mb-3">
           <Icon name="tabler:book" size="20" />
         </div>
@@ -99,15 +92,4 @@ import { Icon } from 'astro-icon/components';
       </div>
     </div>
   </div>
-
-  <script>
-    import { setupReveal } from '../utils/reveal';
-
-    setupReveal({
-      steps: [
-        { selector: '[data-reveal="about-header"]', y: 16, duration: 0.5, stagger: 0, threshold: 0.2 },
-        { selector: '[data-reveal="about-card"]', y: 24, duration: 0.55, stagger: 0.08, threshold: 0.1 },
-      ],
-    }, 'about');
-  </script>
 </section>

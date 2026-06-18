@@ -37,8 +37,15 @@ const caseStudyUrl = slug ? `/work/${slug}` : undefined;
 ---
 
 <article
-  class="group relative flex h-full flex-col overflow-hidden rounded-card border border-surface-800 bg-surface-900 transition-all duration-base ease-expo-out hover:-translate-y-1 hover:border-accent/25 hover:shadow-[0_8px_32px_-8px] hover:shadow-accent/10"
+  class="group relative flex h-full flex-col overflow-hidden rounded-card border border-surface-800 bg-surface-900/70 transition-all duration-base ease-expo-out hover:-translate-y-2 hover:border-accent/30 hover:shadow-[0_12px_40px_-12px] hover:shadow-accent/15"
 >
+  {caseStudyUrl && (
+    <a
+      href={caseStudyUrl}
+      class="absolute inset-0 z-10"
+      aria-label={`Read case study: ${title}`}
+    ></a>
+  )}
   <div class="h-[180px]" style="background-color: var(--color-surface-950);">
     {image ? (
       <div class="w-full h-full p-3">
@@ -46,14 +53,14 @@ const caseStudyUrl = slug ? `/work/${slug}` : undefined;
           <img
             src={image}
             alt={title}
-            class="w-full h-full object-cover object-top transition-transform duration-base ease-expo-out group-hover:scale-[1.02]"
+            class="w-full h-full object-cover object-top transition-transform duration-base ease-expo-out group-hover:scale-105"
             loading="lazy"
           />
         </div>
       </div>
     ) : (
       <div
-        class="mx-auto w-4/5 h-3/4 mt-4 rounded-card border border-surface-800 bg-surface-900 flex flex-col items-center justify-center"
+        class="mx-auto w-4/5 h-3/4 mt-4 rounded-card border border-surface-800 bg-surface-900/70 flex flex-col items-center justify-center"
       >
         <div class="flex gap-1.5 self-start ml-4 mt-3">
           <div class="h-2 w-2 rounded-full bg-surface-700"></div>
@@ -90,34 +97,25 @@ const caseStudyUrl = slug ? `/work/${slug}` : undefined;
 
     <div class="flex justify-between items-center mt-auto">
       <div class="flex gap-2">
-        {caseStudyUrl && (
-          <a
-            href={caseStudyUrl}
-            aria-label={`Read case study: ${title}`}
-            class="px-3 py-1 rounded-input border border-surface-700/50 text-surface-400 hover:border-accent hover:text-accent hover:bg-accent/5 transition-all duration-base ease-expo-out text-sm"
-          >
-            Read
-          </a>
-        )}
         {githubUrl && (
           <a
             href={githubUrl}
             target="_blank"
             aria-label={`${title} source code on GitHub`}
-            class="px-3 py-1 rounded-input border border-surface-700/50 text-surface-400 hover:border-accent hover:text-accent hover:bg-accent/5 transition-all duration-base ease-expo-out text-sm"
-          >
-            Github
-          </a>
+              class="relative z-20 px-3 py-1 rounded-input border border-surface-700/50 text-surface-400 transition-all duration-base ease-expo-out hover:border-accent hover:text-accent hover:bg-accent/5 active:scale-95 text-sm"
+            >
+              Github
+            </a>
         )}
-        {liveUrl && (
-          <a
+          {liveUrl && (
+            <a
             href={liveUrl}
             target="_blank"
             aria-label={`${title} live website`}
-            class="px-3 py-1 rounded-input border border-surface-700/50 text-surface-400 hover:border-accent hover:text-accent hover:bg-accent/5 transition-all duration-base ease-expo-out text-sm"
-          >
-            Live site
-          </a>
+              class="relative z-20 px-3 py-1 rounded-input border border-surface-700/50 text-surface-400 transition-all duration-base ease-expo-out hover:border-accent hover:text-accent hover:bg-accent/5 active:scale-95 text-sm"
+            >
+              Live site
+            </a>
         )}
       </div>
     </div>

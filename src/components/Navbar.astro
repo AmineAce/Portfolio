@@ -24,6 +24,22 @@ const navLinks = [
     -webkit-backdrop-filter: blur(16px) saturate(1.2);
     border-bottom: 1px solid oklch(20% 0.02 270 / 0.6);
   }
+  [data-nav-link]::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 40%;
+    height: 1.5px;
+    background: #6366f1;
+    transform: translateX(-50%) scaleX(0);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 1px;
+  }
+  [data-nav-link]:hover::after,
+  [data-nav-link].active::after {
+    transform: translateX(-50%) scaleX(1);
+  }
 </style>
 
 <nav id="navbar" class="fixed top-0 w-full z-50 transition-colors duration-base ease-expo-out">
@@ -35,14 +51,14 @@ const navLinks = [
         <a
           href={link.href}
           data-nav-link
-          class="rounded-pill px-4 py-2 text-sm text-surface-400 hover:bg-accent/15 hover:text-accent transition-colors duration-base ease-expo-out"
+          class="relative rounded-pill px-4 py-2 text-sm text-surface-400 transition-colors duration-base ease-expo-out hover:bg-accent/15 hover:text-accent active:scale-95"
         >
           {link.label}
         </a>
       ))}
     </div>
 
-    <button id="menu-toggle" class="flex flex-col items-center gap-1 md:hidden focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2" aria-label="Open navigation menu">
+    <button id="menu-toggle" class="flex flex-col items-center gap-1 md:hidden focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 active:scale-95 transition-transform duration-micro" aria-label="Open navigation menu">
       <div data-bar="1" class="h-[1.5px] w-[18px] bg-surface-400 transition-all duration-base ease-expo-out"></div>
       <div data-bar="2" class="h-[1.5px] w-[18px] bg-surface-400 transition-all duration-base ease-expo-out"></div>
       <div data-bar="3" class="h-[1.5px] w-[18px] bg-surface-400 transition-all duration-base ease-expo-out"></div>
@@ -50,7 +66,7 @@ const navLinks = [
   </div>
 </nav>
 
-<div id="mobile-menu" class="fixed inset-0 z-[60] hidden flex-col bg-surface-black/95 backdrop-blur-xl">
+<div id="mobile-menu" class="fixed inset-0 z-[60] hidden flex-col bg-surface-black/95 backdrop-blur-xl" style="transition: opacity 0.2s ease-out;">
   <div class="flex justify-end px-6 pt-6">
     <button id="menu-close" class="text-surface-400 text-2xl leading-none focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2" aria-label="Close navigation menu">&times;</button>
   </div>
@@ -59,20 +75,19 @@ const navLinks = [
       <a
         href={link.href}
         data-nav-link-mobile
-        class="text-2xl text-surface-400 transition-colors duration-base ease-expo-out hover:text-accent"
-      >
-        {link.label}
-      </a>
-    ))}
+        class="text-2xl text-surface-400 transition-all duration-base ease-expo-out hover:text-accent active:scale-95"
+          style="transition: opacity 0.25s ease-out, transform 0.25s ease-out;"
+        >
+          {link.label}
+        </a>
+      ))}
   </div>
 </div>
 
 <script>
-  import { animate } from 'motion';
-
   (function () {
     var navbar = document.getElementById('navbar');
-    var menuToggle = document.getElementById('menu-toggle');
+      var menuToggle = document.getElementById('menu-toggle');
     var menuClose = document.getElementById('menu-close');
     var mobileMenu = document.getElementById('mobile-menu');
     var navLinks = document.querySelectorAll('[data-nav-link]');
@@ -82,46 +97,46 @@ const navLinks = [
 
     function onScroll() {
       if (!navbar) return;
-      var threshold = navbar.offsetHeight;
+        var threshold = navbar.offsetHeight;
       if (window.scrollY > threshold) {
-        navbar.classList.add('scrolled');
+          navbar.classList.add('scrolled');
       } else {
         navbar.classList.remove('scrolled');
       }
-    }
+      }
 
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
     function setActiveLink(activeLink) {
       navLinks.forEach(function (link) {
-        link.classList.remove('bg-accent/15', 'text-accent');
+          link.classList.remove('bg-accent/15', 'text-accent');
       });
-      if (activeLink) {
-        activeLink.classList.add('bg-accent/15', 'text-accent');
+        if (activeLink) {
+          activeLink.classList.add('bg-accent/15', 'text-accent');
       }
-    }
+      }
 
     var observer = new IntersectionObserver(
       function (entries) {
-        for (var i = 0; i < entries.length; i++) {
-          var entry = entries[i];
-          if (entry.isIntersecting) {
-            var id = entry.target.id;
-            var link = document.querySelector('[data-nav-link][href$="#' + id + '"]');
+          for (var i = 0; i < entries.length; i++) {
+            var entry = entries[i];
+            if (entry.isIntersecting) {
+              var id = entry.target.id;
+              var link = document.querySelector('[data-nav-link][href$="#' + id + '"]');
             if (link) setActiveLink(link);
+            }
           }
-        }
-      },
-      { threshold: 0.6 }
-    );
+        },
+        { threshold: 0.6 }
+      );
 
     function observeSections() {
       sectionIds.forEach(function (id) {
-        var el = document.getElementById(id);
-        if (el) observer.observe(el);
-      });
-    }
+          var el = document.getElementById(id);
+          if (el) observer.observe(el);
+        });
+      }
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', observeSections);
@@ -131,7 +146,7 @@ const navLinks = [
 
     function openMenu() {
       if (isMenuOpen) return;
-      isMenuOpen = true;
+        isMenuOpen = true;
 
       mobileNavLinks.forEach(function (link) {
         link.classList.remove('bg-accent/15', 'text-accent');
@@ -142,15 +157,18 @@ const navLinks = [
       menuToggle.setAttribute('data-menu-open', '');
       menuToggle.setAttribute('aria-label', 'Close navigation menu');
 
-      animate(mobileMenu, { opacity: [0, 1] }, { duration: 0.2, easing: [0.16, 1, 0.3, 1] });
-
       var links = mobileMenu.querySelectorAll('a');
       links.forEach(function (link, i) {
-        animate(link, { opacity: [0, 1], y: [12, 0] }, { duration: 0.3, delay: i * 0.06, easing: [0.16, 1, 0.3, 1] });
-      });
+          link.style.opacity = '0';
+        link.style.transform = 'translateY(12px)';
+          setTimeout(function () {
+            link.style.opacity = '1';
+            link.style.transform = 'translateY(0)';
+          }, i * 60);
+        });
     }
 
-    function closeMenu() {
+      function closeMenu() {
       if (!isMenuOpen) return;
       isMenuOpen = false;
 
@@ -158,26 +176,28 @@ const navLinks = [
       menuToggle.setAttribute('aria-label', 'Open navigation menu');
       document.body.style.overflow = '';
 
-      animate(mobileMenu, { opacity: [1, 0] }, { duration: 0.15, easing: [0.16, 1, 0.3, 1] }).finished.then(function () {
+        mobileMenu.style.opacity = '0';
+        setTimeout(function () {
         mobileMenu.classList.add('hidden');
-        var links = mobileMenu.querySelectorAll('a');
+          mobileMenu.style.opacity = '';
+          var links = mobileMenu.querySelectorAll('a');
         links.forEach(function (link) {
-          link.style.opacity = '';
-          link.style.transform = '';
+            link.style.opacity = '';
+            link.style.transform = '';
         });
-      });
-    }
+        }, 200);
+      }
 
     if (menuToggle && mobileMenu) {
-      menuToggle.addEventListener('click', openMenu);
-    }
+        menuToggle.addEventListener('click', openMenu);
+      }
 
     if (menuClose) {
-      menuClose.addEventListener('click', closeMenu);
-    }
+        menuClose.addEventListener('click', closeMenu);
+      }
 
-    mobileNavLinks.forEach(function (link) {
-      link.addEventListener('click', closeMenu);
+      mobileNavLinks.forEach(function (link) {
+        link.addEventListener('click', closeMenu);
     });
   })();
 </script>
