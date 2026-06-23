@@ -58,7 +58,7 @@ const navLinks = [
       ))}
     </div>
 
-    <button id="menu-toggle" class="flex flex-col items-center gap-1 md:hidden focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 active:scale-95 transition-transform duration-micro" aria-label="Open navigation menu">
+    <button id="menu-toggle" class="flex flex-col items-center justify-center min-w-[48px] min-h-[48px] gap-1 md:hidden focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 active:scale-95 transition-transform duration-micro" aria-label="Open navigation menu">
       <div data-bar="1" class="h-[1.5px] w-[18px] bg-surface-400 transition-all duration-base ease-expo-out"></div>
       <div data-bar="2" class="h-[1.5px] w-[18px] bg-surface-400 transition-all duration-base ease-expo-out"></div>
       <div data-bar="3" class="h-[1.5px] w-[18px] bg-surface-400 transition-all duration-base ease-expo-out"></div>
@@ -86,12 +86,12 @@ const navLinks = [
 
 <script>
   (function () {
-    var navbar = document.getElementById('navbar');
-      var menuToggle = document.getElementById('menu-toggle');
-    var menuClose = document.getElementById('menu-close');
-    var mobileMenu = document.getElementById('mobile-menu');
-    var navLinks = document.querySelectorAll('[data-nav-link]');
-    var mobileNavLinks = document.querySelectorAll('[data-nav-link-mobile]');
+    var navbar = document.getElementById('navbar') as HTMLElement | null;
+      var menuToggle = document.getElementById('menu-toggle') as HTMLElement | null;
+    var menuClose = document.getElementById('menu-close') as HTMLElement | null;
+    var mobileMenu = document.getElementById('mobile-menu') as HTMLElement | null;
+    var navLinks = document.querySelectorAll('[data-nav-link]') as NodeListOf<HTMLAnchorElement>;
+    var mobileNavLinks = document.querySelectorAll('[data-nav-link-mobile]') as NodeListOf<HTMLAnchorElement>;
     var sectionIds = ['work', 'about', 'contact'];
     var isMenuOpen = false;
 
@@ -108,7 +108,7 @@ const navLinks = [
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
-    function setActiveLink(activeLink) {
+    function setActiveLink(activeLink: Element | null) {
       navLinks.forEach(function (link) {
           link.classList.remove('bg-accent/15', 'text-accent');
       });
@@ -145,7 +145,7 @@ const navLinks = [
     }
 
     function openMenu() {
-      if (isMenuOpen) return;
+      if (isMenuOpen || !menuToggle || !mobileMenu) return;
         isMenuOpen = true;
 
       mobileNavLinks.forEach(function (link) {
@@ -169,7 +169,7 @@ const navLinks = [
     }
 
       function closeMenu() {
-      if (!isMenuOpen) return;
+      if (!isMenuOpen || !menuToggle || !mobileMenu) return;
       isMenuOpen = false;
 
       menuToggle.removeAttribute('data-menu-open');
@@ -177,7 +177,8 @@ const navLinks = [
       document.body.style.overflow = '';
 
         mobileMenu.style.opacity = '0';
-        setTimeout(function () {
+        setTimeout(() => {
+            if (!mobileMenu) return;
         mobileMenu.classList.add('hidden');
           mobileMenu.style.opacity = '';
           var links = mobileMenu.querySelectorAll('a');

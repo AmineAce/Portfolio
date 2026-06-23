@@ -126,15 +126,15 @@
   <script>
     import { showToast } from '../utils/toast';
 
-    const form = document.getElementById('contact-form');
-    const submitBtn = document.getElementById('submit-btn');
-    const submitText = document.getElementById('submit-text');
-    const submitSpinner = document.getElementById('submit-spinner');
-    const formSuccess = document.getElementById('form-success');
-    const resendBtn = document.getElementById('resend-btn');
-    const contactFormContainer = document.getElementById('contact-form-container');
+    const form = document.getElementById('contact-form') as HTMLFormElement | null;
+    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+    const submitText = document.getElementById('submit-text') as HTMLElement | null;
+    const submitSpinner = document.getElementById('submit-spinner') as HTMLElement | null;
+    const formSuccess = document.getElementById('form-success') as HTMLElement | null;
+    const resendBtn = document.getElementById('resend-btn') as HTMLElement | null;
+    const contactFormContainer = document.getElementById('contact-form-container') as HTMLElement | null;
 
-    if (form && submitBtn && formSuccess) {
+    if (form && submitBtn && formSuccess && submitText && submitSpinner && contactFormContainer) {
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -188,13 +188,14 @@
 
     if (resendBtn) {
       resendBtn.addEventListener('click', () => {
+        if (!formSuccess || !contactFormContainer || !form || !submitBtn || !submitText || !submitSpinner) return;
         formSuccess.classList.add('hidden');
         contactFormContainer.classList.remove('hidden');
         form.reset();
         submitBtn.disabled = false;
         submitText.textContent = 'Send me your idea';
-        submitSpinner.classList.remove('active');
-      });
+          submitSpinner.classList.remove('active');
+        });
     }
   </script>
 </section>

@@ -1,5 +1,7 @@
 ---
 import VitruvianMan from '../components/VitruvianMan.astro';
+
+const currentYear = new Date().getFullYear();
 ---
 
 <section id="hero" class="relative min-h-[80vh] flex flex-col justify-center px-6 pt-16 overflow-hidden">
@@ -46,7 +48,7 @@ import VitruvianMan from '../components/VitruvianMan.astro';
             style="animation: hero-scale-in 0.4s ease-out 0.65s both;"
         >
             <span class="h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-emerald-500/30"></span>
-            Available for freelance &middot; 2026
+            Available for freelance &middot; {currentYear}
           </span>
         </div>
 
