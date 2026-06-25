@@ -1,7 +1,5 @@
 ---
 import VitruvianMan from '../components/VitruvianMan.astro';
-
-const currentYear = new Date().getFullYear();
 ---
 
 <section id="hero" class="relative min-h-[80vh] flex flex-col justify-center px-6 pt-16 overflow-hidden">
@@ -25,7 +23,7 @@ const currentYear = new Date().getFullYear();
             class="font-sans text-surface-400 text-base leading-relaxed max-w-lg mb-10"
             style="animation: hero-fade-up 0.4s ease-out 0.35s both;"
         >
-            Frontend developer — I build precise, performant interfaces that feel as good as they look.
+            Frontend developer. I build precise, performant interfaces that feel as good as they look.
         </div>
 
           <div class="mb-8 flex flex-wrap gap-3" style="animation: hero-fade-up 0.4s ease-out 0.5s both;">
@@ -42,15 +40,7 @@ const currentYear = new Date().getFullYear();
               Get in Touch
             </a>
           </div>
-
-        <span
-            class="inline-flex items-center gap-2 rounded-pill border border-surface-800 bg-surface-900/60 px-4 py-1.5 text-xs text-surface-400 mt-8"
-            style="animation: hero-scale-in 0.4s ease-out 0.65s both;"
-        >
-            <span class="h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-emerald-500/30"></span>
-            Available for freelance &middot; {currentYear}
-          </span>
-        </div>
+          </div>
 
       <!-- Right: Vitruvian Man Animation -->
       <div class="flex justify-center md:justify-end">
