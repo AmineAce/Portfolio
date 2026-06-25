@@ -7,7 +7,7 @@ featured: true
 liveUrl: "https://atlasguards.com"
 githubUrl: "https://github.com/AmineAce/atlasguards"
 order: 1
-image: "/projects/atlasguards.png"
+image: "/projects/atlasguards.webp"
 ---
 
 ## The Problem

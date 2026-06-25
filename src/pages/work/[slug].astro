@@ -20,7 +20,7 @@ const others = sorted.filter((p) => p.id !== entry.id).slice(0, 3);
 
 const { title, description, tags, year, featured, liveUrl, githubUrl, image } = entry.data;
 const pageTitle = `${title} | Amine`;
-const ogImage = image ? `https://aemine.vercel.app${image}` : undefined;
+const ogImage = image ? `https://aemine.vercel.app${image.replace('.webp', '.png')}` : undefined;
 ---
 
 <Base title={pageTitle} description={description} ogImage={ogImage}>
@@ -56,7 +56,11 @@ const ogImage = image ? `https://aemine.vercel.app${image}` : undefined;
       <div class="relative z-10">
         {image && (
           <div class="mb-8 rounded-card overflow-hidden border border-surface-800 bg-surface-950 shadow-lg">
-            <img src={image} alt={title} class="w-full h-auto object-cover" />
+            <picture>
+                <source srcset={image.replace('.webp', '.avif')} type="image/avif" />
+                <source srcset={image} type="image/webp" />
+              <img src={image.replace('.webp', '.png')} alt={title} class="w-full h-auto object-cover" />
+            </picture>
           </div>
         )}
 

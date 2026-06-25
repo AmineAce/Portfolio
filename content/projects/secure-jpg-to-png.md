@@ -7,7 +7,7 @@ featured: false
 liveUrl: "https://secure-jpg-to-png.pages.dev"
 githubUrl: "https://github.com/AmineAce/privacy-converter"
 order: 2
-image: "/projects/secure-jpg-to-png.png"
+image: "/projects/secure-jpg-to-png.webp"
 ---
 
 ## The Problem
