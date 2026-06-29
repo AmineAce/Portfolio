@@ -124,78 +124,83 @@
   </div>
 
   <script>
+    import { slotText } from "slot-text";
     import { showToast } from '../utils/toast';
-
+  
     const form = document.getElementById('contact-form') as HTMLFormElement | null;
     const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
     const submitText = document.getElementById('submit-text') as HTMLElement | null;
     const submitSpinner = document.getElementById('submit-spinner') as HTMLElement | null;
     const formSuccess = document.getElementById('form-success') as HTMLElement | null;
-    const resendBtn = document.getElementById('resend-btn') as HTMLElement | null;
+      const resendBtn = document.getElementById('resend-btn') as HTMLElement | null;
     const contactFormContainer = document.getElementById('contact-form-container') as HTMLElement | null;
+  
+      let label: ReturnType<typeof slotText> | null = null;
 
-    if (form && submitBtn && formSuccess && submitText && submitSpinner && contactFormContainer) {
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
+      if (form && submitBtn && formSuccess && submitText && submitSpinner && contactFormContainer) {
+        label = slotText(submitText, "Send me your idea", { duration: 200, stagger: 30 });
+  
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+  
         formSuccess.classList.add('hidden');
         submitBtn.disabled = true;
-        submitText.textContent = 'Sending';
+          label?.set("Sending…", { direction: "up" });
         submitSpinner.classList.add('active');
 
         const formData = new FormData(form);
-        const params = new URLSearchParams();
-        for (const [key, value] of formData) {
-          params.append(key, value as string);
-        }
-
-        try {
-          const res = await fetch('/api/contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: params,
-          });
-
-          let data;
+          const params = new URLSearchParams();
+          for (const [key, value] of formData) {
+            params.append(key, value as string);
+          }
+  
           try {
+          const res = await fetch('/api/contact', {
+              method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: params,
+            });
+  
+            let data;
+            try {
             data = await res.json();
           } catch {
-            showToast('Server error. Please try again later.');
-            submitBtn.disabled = false;
-            submitText.textContent = 'Send me your idea';
+              showToast('Server error. Please try again later.');
+              submitBtn.disabled = false;
+            label?.set("Send me your idea", { direction: "down" });
             submitSpinner.classList.remove('active');
             return;
           }
-
-          if (res.ok && data.success) {
+  
+            if (res.ok && data.success) {
             form.reset();
             contactFormContainer.classList.add('hidden');
-            formSuccess.classList.remove('hidden');
-          } else {
-            showToast(data.error || 'Something went wrong.');
+              formSuccess.classList.remove('hidden');
+            } else {
+              showToast(data.error || 'Something went wrong.');
+              submitBtn.disabled = false;
+              label?.set("Send me your idea", { direction: "down" });
+              submitSpinner.classList.remove('active');
+            }
+          } catch (_) {
+            showToast('Connection error. Check your internet and try again.');
             submitBtn.disabled = false;
-            submitText.textContent = 'Send me your idea';
+            label?.set("Send me your idea", { direction: "down" });
             submitSpinner.classList.remove('active');
-          }
-        } catch (_) {
-          showToast('Connection error. Check your internet and try again.');
-          submitBtn.disabled = false;
-          submitText.textContent = 'Send me your idea';
-          submitSpinner.classList.remove('active');
         }
-      });
-    }
-
-    if (resendBtn) {
-      resendBtn.addEventListener('click', () => {
-        if (!formSuccess || !contactFormContainer || !form || !submitBtn || !submitText || !submitSpinner) return;
-        formSuccess.classList.add('hidden');
-        contactFormContainer.classList.remove('hidden');
-        form.reset();
-        submitBtn.disabled = false;
-        submitText.textContent = 'Send me your idea';
-          submitSpinner.classList.remove('active');
         });
+      }
+  
+      if (resendBtn) {
+        resendBtn.addEventListener('click', () => {
+          if (!formSuccess || !contactFormContainer || !form || !submitBtn || !submitText || !submitSpinner) return;
+        formSuccess.classList.add('hidden');
+          contactFormContainer.classList.remove('hidden');
+          form.reset();
+        submitBtn.disabled = false;
+        label?.set("Send me your idea", { direction: "down" });
+        submitSpinner.classList.remove('active');
+      });
     }
   </script>
 </section>

@@ -1,38 +1,14 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
-interface ProjectData {
-  title: string;
-  description?: string;
-  tags?: string[];
-  year?: number;
-  featured?: boolean;
-  liveUrl?: string;
-  githubUrl?: string;
-  order?: number;
-  coverColor?: string;
-  image?: string;
-  slug?: string;
-}
-
 interface Props {
-  entry?: CollectionEntry<'projects'> | ProjectData;
+  entry: CollectionEntry<'projects'>;
 }
 
 const { entry } = Astro.props;
 
-const data: ProjectData = entry && 'data' in entry ? entry.data : (entry as ProjectData) || {};
-
-const {
-  title = '',
-  description = '',
-  tags = [],
-  liveUrl,
-  githubUrl,
-  image,
-} = data;
-
-const slug = entry && 'id' in entry ? entry.id : (entry as ProjectData)?.slug || '';
+const { title, description, tags, liveUrl, githubUrl, image } = entry.data;
+const slug = entry.id;
 const caseStudyUrl = slug ? `/work/${slug}` : undefined;
 ---
 
