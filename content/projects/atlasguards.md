@@ -1,6 +1,6 @@
 ---
 title: "AtlasGuards"
-description: "Full stack SaaS built solo with Next.js, Supabase, and Paddle integration. Shipped in weeks."
+description: "A secure digital release management platform for media professionals — built with Next.js 16, Supabase, Paddle, and Redis."
 tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Supabase", "Paddle", "Redis"]
 year: 2025
 featured: true
@@ -12,14 +12,12 @@ image: "/projects/atlasguards.webp"
 
 ## The Problem
 
-Media professionals face a critical challenge: collecting legally-binding guest release agreements efficiently while ensuring authenticity and security. Traditional methods like paper forms or generic digital signatures are cumbersome, error-prone, and offer no way to verify authenticity later. There was no solution tailored specifically for the media industry that combined legal compliance with modern workflow needs.
+Media professionals need a way to collect legally-binding guest release agreements that is both efficient and secure. Traditional methods — paper forms, generic digital signature tools, email chains — are slow, error-prone, and offer no way to verify authenticity after the fact. No existing solution is tailored specifically for the media industry, leaving showrunners, podcast hosts, and production crews to cobble together workflows from disconnected tools.
 
 ## What I Built
 
-AtlasGuards is a secure digital release management platform built with Next.js 16, Supabase, and Paddle. The platform enables hosts to create media properties (shows/podcasts), invite guests via magic links, capture legally-binding biometric signatures, generate PDFs, and verify release authenticity through a public verification system.
-
-I architected the complete stack including authentication with Supabase Auth, subscription billing via Paddle (with three tiers: Free, Professional, Agency), email notifications through Resend, and webhook handlers for payment processing. The database uses Row Level Security policies, rate limiting with Upstash Redis, and CSRF protection through Next.js. The signature capture uses a custom biometric signature pad that creates legally-binding digital signatures.
+AtlasGuards is a secure digital release management platform for media professionals. I architected and shipped the full stack solo — using Next.js 16, Supabase, Paddle, and Redis — in weeks. The platform lets hosts create media properties (shows and podcasts), invite guests via magic link, capture legally-binding biometric signatures, generate PDFs on demand, and verify releases through a public authenticity API. The subscription system supports three tiers (Free, Professional, Agency) with pro-rated upgrades and webhook-driven payment processing. Security is enforced at every layer: Row Level Security policies on every database table, rate limiting via Upstash Redis, CSRF protection, and HTTP-only cookies. The codebase includes 534 automated tests across Jest unit tests and Playwright end-to-end tests covering all critical user flows.
 
 ## What I Learned
 
-Building this taught me the complexity of subscription billing systems handling webhooks, managing tiered pricing, and implementing pro-rated upgrades required careful state management. I also learned that security isn't optional: implementing RLS policies on every table, rate limiting signature submissions, and using secure HTTP-only cookies became non-negotiable best practices. The testing strategy (534 tests with Jest and Playwright) ensured the system could handle real-world user flows while maintaining reliability.
+Implementing subscription billing with tiered pricing, pro-rated upgrades, and real-time webhook handling taught me that payment state management is one of the hardest problems in full-stack development. Security must be architected from day one, not bolted on later: every database query needs RLS enforcement, every mutation needs rate limiting, every cookie needs secure flags. The testing strategy proved that 534 tests aren't overhead — they're the difference between shipping confidently and shipping nervously.

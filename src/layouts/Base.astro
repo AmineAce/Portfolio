@@ -10,24 +10,34 @@ export interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  schemas?: Array<Record<string, unknown>>;
 }
 
-const { title, description = 'Frontend developer based in Casablanca, building precise, performant interfaces that feel as good as they look.', ogImage } = Astro.props;
+const { title, description = 'Frontend developer based in Casablanca, building precise, performant interfaces that feel as good as they look.', ogImage, schemas = [] } = Astro.props;
 const canonicalURL = Astro.url;
 const siteUrl = 'https://aemine.vercel.app';
 
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Amine',
-  url: siteUrl,
-  jobTitle: 'Frontend Developer',
-  sameAs: [
-    'https://github.com/AmineAce',
-    'https://linkedin.com/in/amineace',
-    'https://twitter.com/amineace'
-  ]
-};
+const baseSchemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Amine',
+    url: siteUrl,
+    jobTitle: 'Frontend Developer',
+    sameAs: [
+      'https://github.com/AmineAce',
+      'https://linkedin.com/in/amineace',
+      'https://twitter.com/amineace'
+    ]
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Amine - Frontend Developer',
+    url: siteUrl,
+  },
+];
+const allSchemas = [...baseSchemas, ...schemas];
 ---
 
 <!doctype html>
@@ -59,7 +69,9 @@ const structuredData = {
     {ogImage && <meta name="twitter:image" content={ogImage} />}
 
     <!-- Structured Data (JSON-LD) -->
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+    {allSchemas.map((schema) => (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
+    ))}
 
     <!-- Font loading via Astro Fonts API -->
     <Font cssVariable="--font-geist-sans" preload />

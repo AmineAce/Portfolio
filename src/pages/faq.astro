@@ -1,0 +1,146 @@
+---
+import Base from '../layouts/Base.astro';
+
+const siteUrl = 'https://aemine.vercel.app';
+const pageUrl = `${siteUrl}/faq`;
+
+const faqs = [
+  {
+    question: 'Who is Amine?',
+    answer:
+      'Amine is a frontend developer based in Casablanca, Morocco, specializing in building precise, performant web interfaces. With a self-taught background in development and a B.A. in English, he brings a unique blend of technical skill and communication to every project.',
+  },
+  {
+    question: 'What does Amine do?',
+    answer:
+      'Amine builds modern web applications with a focus on clean interfaces, thoughtful interactions, and performant code. He currently works with technologies like Astro, React, TypeScript, and Tailwind CSS to create production-grade digital experiences.',
+  },
+  {
+    question: "What is Amine's tech stack?",
+    answer:
+      "Amine's primary stack includes Astro, TypeScript, React, Tailwind CSS, and Vercel for deployment. He also works with Next.js, Supabase, Redis, and has experience with Web Workers, Canvas APIs, and serverless functions.",
+  },
+  {
+    question: 'Is Amine available for hire?',
+    answer:
+      'Yes, Amine is open to new opportunities including full-time roles, freelance projects, and contract work. He is currently building a SaaS platform for media professionals while exploring new opportunities.',
+  },
+  {
+    question: 'Where is Amine based?',
+    answer:
+      'Amine is based in Casablanca, Morocco, and works with clients and teams worldwide.',
+  },
+  {
+    question: 'Does Amine work remotely?',
+    answer:
+      'Yes, Amine works remotely and is experienced with distributed teams, async communication, and remote collaboration workflows.',
+  },
+  {
+    question: 'What projects has Amine built?',
+    answer:
+      'Notable projects include AtlasGuards, a full-stack SaaS platform for media release management built with Next.js, Supabase, and Paddle; and Secure JPG to PNG, a privacy-first client-side file conversion tool that processes files entirely in the browser.',
+  },
+  {
+    question: 'How can I contact Amine?',
+    answer:
+      'You can reach Amine through the contact form on his portfolio website or via LinkedIn at linkedin.com/in/amineace.',
+  },
+  {
+    question: "What is Amine's development approach?",
+    answer:
+      'Amine focuses on building production-ready applications with attention to performance, accessibility, and user experience. He follows modern best practices including semantic HTML, proper SEO foundations, Core Web Vitals optimization, and comprehensive testing.',
+  },
+  {
+    question: 'What kind of projects does Amine take on?',
+    answer:
+      'Amine takes on web application development projects ranging from interactive frontends and design systems to full-stack SaaS platforms. He prefers projects that value quality, performance, and thoughtful design.',
+  },
+  {
+    question: "How can I view Amine's work?",
+    answer:
+      "You can browse Amine's portfolio projects on his website at aemine.vercel.app, and view source code on GitHub at github.com/AmineAce.",
+  },
+  {
+    question: 'Does Amine use AI in development?',
+    answer:
+      'Yes, Amine actively explores and integrates AI-assisted development workflows to ship better products faster. He stays current with emerging tools and approaches while maintaining high code quality standards.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'FAQ', item: pageUrl },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+};
+
+const pageSchemas = [breadcrumbSchema, faqSchema];
+---
+
+<Base title="FAQ | Amine" description="Frequently asked questions about Amine, a frontend developer based in Casablanca." schemas={pageSchemas}>
+  <section class="max-w-[1100px] mx-auto px-6 py-24">
+    <div class="mb-16">
+      <p class="text-xs text-accent-ondark font-medium tracking-widest uppercase mb-3">
+        FAQ
+      </p>
+      <h1 class="text-4xl font-medium text-surface-200 tracking-tight">
+        Frequently asked questions.
+      </h1>
+    </div>
+
+    <div class="max-w-3xl mx-auto space-y-3">
+      {faqs.map((faq) => (
+        <details class="group bg-surface-900/70 border border-surface-800 rounded-card overflow-hidden transition-all duration-base ease-expo-out hover:border-surface-700">
+          <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer list-none select-none text-surface-200 font-medium text-sm leading-snug transition-colors duration-micro hover:text-surface-white">
+            {faq.question}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="icon shrink-0 text-surface-500 transition-transform duration-base ease-expo-out group-open:rotate-45"
+            >
+              <path d="M12 5v14" />
+              <path d="M5 12h14" />
+            </svg>
+          </summary>
+          <div class="px-6 pb-5 pt-0 text-surface-400 text-sm leading-relaxed border-t border-surface-800 mt-0">
+            <div class="pt-4">
+              {faq.answer}
+            </div>
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+  details summary::marker {
+    display: none;
+    content: '';
+  }
+</style>

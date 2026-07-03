@@ -9,3 +9,5 @@ dist/
 .vscode/
 .env*.local
 lh-report.html
+.empryo/
+.soulforge/
