@@ -20,8 +20,10 @@ const siteUrl = 'https://aemine.vercel.app';
 const baseSchemas = [
   {
     '@context': 'https://schema.org',
+    '@id': `${siteUrl}/#person`,
     '@type': 'Person',
-    name: 'Amine',
+    name: 'Amine E.',
+    alternateName: 'AmineAce',
     url: siteUrl,
     jobTitle: 'Frontend Developer',
     sameAs: [
@@ -32,9 +34,11 @@ const baseSchemas = [
   },
   {
     '@context': 'https://schema.org',
+    '@id': `${siteUrl}/#website`,
     '@type': 'WebSite',
     name: 'Amine - Frontend Developer',
     url: siteUrl,
+    about: { '@id': `${siteUrl}/#person` },
   },
 ];
 const allSchemas = [...baseSchemas, ...schemas];

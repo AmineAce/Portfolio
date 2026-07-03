@@ -37,10 +37,11 @@ const breadcrumbSchema = {
 
 const articleSchema = {
   '@context': 'https://schema.org',
+  '@id': `${pageUrl}#article`,
   '@type': 'TechArticle',
   headline: title,
   description: description,
-  author: { '@type': 'Person', name: 'Amine', url: siteUrl },
+  author: { '@id': `${siteUrl}/#person` },
   datePublished: year ? `${year}-01-01` : undefined,
   image: imageUrl,
   proficiencyLevel: 'Expert',
@@ -50,13 +51,14 @@ const articleSchema = {
 
 const softwareSchema = {
   '@context': 'https://schema.org',
+  '@id': `${pageUrl}#software`,
   '@type': 'SoftwareApplication',
   name: title,
   description: description,
   url: liveUrl || pageUrl,
   applicationCategory: 'WebApplication',
   operatingSystem: 'Web',
-  author: { '@type': 'Person', name: 'Amine', url: siteUrl },
+  author: { '@id': `${siteUrl}/#person` },
   screenshot: imageUrl,
 };
 
