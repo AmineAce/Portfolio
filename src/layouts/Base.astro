@@ -5,6 +5,7 @@ import Footer from '../components/Footer.astro';
 import { Font } from 'astro:assets';
 import SpeedInsights from "@vercel/speed-insights/astro";
 import Analytics from "@vercel/analytics/astro";
+import IslandOverlay from '../components/dev/IslandOverlay.astro';
 
 export interface Props {
   title: string;
@@ -28,7 +29,6 @@ const baseSchemas = [
     jobTitle: 'Frontend Developer',
     sameAs: [
       'https://github.com/AmineAce',
-      'https://linkedin.com/in/amineace',
       'https://twitter.com/amineace'
     ]
   },
@@ -175,5 +175,6 @@ const allSchemas = [...baseSchemas, ...schemas];
     </script>
     <SpeedInsights />
     <Analytics />
+    <IslandOverlay />
   </body>
 </html>

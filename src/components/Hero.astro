@@ -1,5 +1,6 @@
 ---
 import VitruvianMan from '../components/VitruvianMan.astro';
+import { StatCounters } from '../components/StatCounters.tsx';
 ---
 
 <section id="hero" class="relative min-h-[80vh] flex flex-col justify-center px-6 pt-16 overflow-hidden">
@@ -50,21 +51,7 @@ import VitruvianMan from '../components/VitruvianMan.astro';
         </div>
       </div>
 
-    <!-- Stats (full width below) -->
-    <div class="flex gap-10 border-t border-surface-900 pt-10 mt-16" style="animation: hero-fade-up 0.4s ease-out 0.8s both;">
-      <div style="animation: hero-fade-up 0.35s ease-out 0s both;">
-        <span id="stat-projects" data-stat-to="3+" class="text-2xl font-medium tracking-tight text-surface-white">0+</span>
-        <div class="mt-1 text-xs text-surface-500">Projects shipped</div>
-      </div>
-      <div style="animation: hero-fade-up 0.35s ease-out 0.08s both;">
-        <span id="stat-lighthouse" data-stat-to="100" class="text-2xl font-medium tracking-tight text-surface-white">0</span>
-        <div class="mt-1 text-xs text-surface-500">Lighthouse score</div>
-      </div>
-      <div style="animation: hero-fade-up 0.35s ease-out 0.16s both;">
-        <span class="text-2xl font-medium tracking-tight text-surface-white">&#8734;</span>
-        <div class="mt-1 text-xs text-surface-500">Attention to detail</div>
-      </div>
-    </div>
+    <StatCounters client:visible />
   </div>
 </section>
 
@@ -89,63 +76,4 @@ import VitruvianMan from '../components/VitruvianMan.astro';
       i++;
     }, 5000);
   }
-
-  (function () {
-    const projects = document.getElementById("stat-projects");
-      const lighthouse = document.getElementById("stat-lighthouse");
-      if (!projects && !lighthouse) return;
-
-        const statObserver = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          const el = entry.target;
-          statObserver.unobserve(el);
-
-              if (el === projects) {
-              const p = slotText(el, "0+", { duration: 150, stagger: 30, bounce: 0.5, interrupt: false });
-                [1, 2, 3].forEach((n, i) => {
-                    setTimeout(() => p.set(n + "+", { direction: "up" }), (i + 1) * 200);
-              });
-                } else if (el === lighthouse) {
-                const l = slotText(el, "0", { duration: 50, stagger: 10, bounce: 0.3, interrupt: false });
-                const start = performance.now();
-
-                  function phase1(now) {
-                  const elapsed = now - start;
-                  const t = Math.min(elapsed / 700, 1);
-                    const eased = 1 - Math.pow(1 - t, 3);
-                    l.set(String(Math.round(82 * eased)), { direction: "up" });
-
-                    if (t < 1) {
-                      requestAnimationFrame(phase1);
-                    } else {
-                      const phase2Start = performance.now();
-                      function phase2(now) {
-                        const elapsed = now - phase2Start;
-                        const t = Math.min(elapsed / 900, 1);
-                      const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-                      l.set(String(Math.round(82 + 15 * eased)), { direction: "up" });
-
-                      if (t < 1) {
-                        requestAnimationFrame(phase2);
-                      } else {
-                        setTimeout(() => l.set("98", { direction: "up", duration: 120, stagger: 25 }), 80);
-                        setTimeout(() => l.set("99", { direction: "up", duration: 120, stagger: 25 }), 175);
-                        setTimeout(() => l.set("100", { direction: "up", duration: 120, stagger: 25 }), 270);
-                      }
-                    }
-                    requestAnimationFrame(phase2);
-                  }
-                }
-                requestAnimationFrame(phase1);
-              }
-            }
-          },
-          { threshold: 0.5 },
-        );
-    if (projects) statObserver.observe(projects);
-    if (lighthouse) statObserver.observe(lighthouse);
-
-  })();
 </script>

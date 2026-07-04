@@ -1,0 +1,20 @@
+[
+  {
+    "component": "ContactForm",
+    "file": "components/Contact.astro",
+    "directive": "idle",
+    "line": 28
+  },
+  {
+    "component": "StatCounters",
+    "file": "components/Hero.astro",
+    "directive": "visible",
+    "line": 54
+  },
+  {
+    "component": "MobileMenu",
+    "file": "components/Navbar.astro",
+    "directive": "media",
+    "line": 54
+  }
+]

@@ -6,10 +6,12 @@ import icon from 'astro-icon';
 
 import sitemap from '@astrojs/sitemap';
 
+import preact from '@astrojs/preact';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://aemine.vercel.app',
-  integrations: [icon(), sitemap()],
+  integrations: [icon(), sitemap(), preact()],
   vite: {
     plugins: [tailwindcss()]
   },

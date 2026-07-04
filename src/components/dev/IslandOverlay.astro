@@ -1,0 +1,219 @@
+---
+const devOnly = import.meta.env.DEV;
+
+let islands = [];
+if (devOnly) {
+  try {
+    islands = (await import('../../data/islands.json')).default;
+  } catch {
+    // islands.json not generated yet — overlay shows toggle but no matches
+  }
+}
+---
+
+{devOnly && (
+  <>
+  <div id="io-data" data-islands={JSON.stringify(islands)} style="display:none"></div>
+  <script>
+    (function () {
+      var ISLANDS = [];
+      try {
+        ISLANDS = JSON.parse(document.getElementById('io-data').getAttribute('data-islands'));
+      } catch (_) {}
+
+      var COLORS = {
+        load: '#3b82f6',
+        idle: '#22c55e',
+        visible: '#f59e0b',
+        media: '#a855f7',
+        only: '#ef4444',
+      };
+
+      var LABELS = { load: 'client:load', idle: 'client:idle', visible: 'client:visible', media: 'client:media', only: 'client:only' };
+
+      var active = false;
+      var keys = [];
+      var keyTimer = null;
+
+      function enable() {
+        if (document.getElementById('io-container')) return;
+        active = true;
+
+        var c = document.createElement('div');
+        c.id = 'io-container';
+        c.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:99999;top:0;left:0;width:100%;height:100%';
+        document.body.appendChild(c);
+
+        draw();
+
+        window.addEventListener('scroll', draw, { passive: true });
+        window.addEventListener('resize', draw, { passive: true });
+        updateToggle();
+      }
+
+      function disable() {
+        var c = document.getElementById('io-container');
+        if (c) c.remove();
+        window.removeEventListener('scroll', draw);
+        window.removeEventListener('resize', draw);
+        active = false;
+        updateToggle();
+      }
+
+      function toggle() {
+        active ? disable() : enable();
+      }
+
+      function unionRects(children) {
+        var union = null;
+        for (var j = 0; j < children.length; j++) {
+          var r = children[j].getBoundingClientRect();
+          if (r.width === 0 && r.height === 0) continue;
+          if (!union) {
+            union = { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+          } else {
+            union.left   = Math.min(union.left,   r.left);
+            union.top    = Math.min(union.top,    r.top);
+            union.right  = Math.max(union.right,  r.right);
+            union.bottom = Math.max(union.bottom, r.bottom);
+          }
+        }
+        if (!union) return null;
+        union.width  = union.right - union.left;
+        union.height = union.bottom - union.top;
+        return union;
+      }
+
+      function draw() {
+        var c = document.getElementById('io-container');
+        if (!c) return;
+
+        c.textContent = '';
+
+        var islands = document.querySelectorAll('astro-island');
+        var matchCount = 0;
+
+        islands.forEach(function (el) {
+          var comp = el.getAttribute('component-export');
+          var dir = el.getAttribute('client');
+          var found = ISLANDS.some(function (i) { return i.component === comp && i.directive === dir; });
+          if (!found) return;
+          matchCount++;
+
+          // <astro-island> has display:contents (no box of its own),
+          // so measure the union of its children instead.
+          var rect = unionRects(el.children);
+          if (!rect) {
+            // All children are display:none (e.g. client:media on desktop).
+            // Draw a small indicator dot offset from the parent element.
+            var parent = el.parentElement;
+            if (!parent) return;
+            var pr = parent.getBoundingClientRect();
+            rect = { left: pr.left + 6, top: pr.top + 6, width: 6, height: 6 };
+          }
+
+          var color = COLORS[dir] || '#888';
+
+          var box = document.createElement('div');
+          box.style.cssText = 'position:fixed;pointer-events:none;box-sizing:border-box;' +
+            'left:' + rect.left + 'px;top:' + rect.top + 'px;' +
+            'width:' + rect.width + 'px;height:' + rect.height + 'px;' +
+            'outline:2px solid ' + color + ';outline-offset:1px;' +
+            'border-radius:2px;z-index:1';
+          c.appendChild(box);
+
+          var labelTop = Math.max(0, rect.top - 22);
+          var label = document.createElement('div');
+          label.textContent = comp + ' \u00b7 ' + (LABELS[dir] || dir);
+          label.style.cssText = 'position:fixed;pointer-events:none;' +
+            'left:' + rect.left + 'px;top:' + labelTop + 'px;' +
+            'background:' + color + ';color:#fff;' +
+            'font:11px/18px monospace;padding:0 5px;' +
+            'border-radius:3px;white-space:nowrap;z-index:2';
+          c.appendChild(label);
+        });
+
+        var legend = document.createElement('div');
+        legend.style.cssText = 'position:fixed;pointer-events:none;top:16px;right:16px;' +
+          'background:rgba(0,0,0,0.72);backdrop-filter:blur(8px);' +
+          'color:rgba(255,255,255,0.85);font:11px/18px monospace;' +
+          'padding:10px 12px;border-radius:8px;' +
+          'border:1px solid rgba(255,255,255,0.08);z-index:3;min-width:140px';
+
+        var title = document.createElement('div');
+        title.textContent = '\uD83C\uDFF4 Islands';
+        title.style.cssText = 'font-weight:600;margin-bottom:6px;font-size:12px';
+        legend.appendChild(title);
+
+        Object.keys(COLORS).forEach(function (dir) {
+          var row = document.createElement('div');
+          row.style.cssText = 'display:flex;align-items:center;gap:6px;opacity:' + (ISLANDS.some(function (i) { return i.directive === dir; }) ? '1' : '0.35');
+          var dot = document.createElement('span');
+          dot.style.cssText = 'display:inline-block;width:8px;height:8px;border-radius:50%;background:' + COLORS[dir] + ';flex-shrink:0';
+          row.appendChild(dot);
+          var txt = document.createElement('span');
+          txt.textContent = LABELS[dir];
+          row.appendChild(txt);
+          legend.appendChild(row);
+        });
+
+        var footer = document.createElement('div');
+        footer.textContent = matchCount + ' island' + (matchCount !== 1 ? 's' : '') + ' matched';
+        footer.style.cssText = 'margin-top:6px;opacity:0.5;border-top:1px solid rgba(255,255,255,0.08);padding-top:6px';
+        legend.appendChild(footer);
+
+        c.appendChild(legend);
+      }
+
+      function updateToggle() {
+        var btn = document.getElementById('io-toggle');
+        if (!btn) return;
+        btn.textContent = active ? '\uD83C\uDFF4 islands \u25B2' : '\uD83C\uDFF4 islands';
+        btn.style.borderColor = active ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)';
+      }
+
+      function createToggle() {
+        if (document.getElementById('io-toggle')) return;
+        var btn = document.createElement('button');
+        btn.id = 'io-toggle';
+        btn.textContent = '\uD83C\uDFF4 islands';
+        btn.setAttribute('aria-label', 'Toggle island overlay');
+        btn.style.cssText = 'position:fixed;bottom:16px;right:16px;z-index:100000;' +
+          'font:12px/1 monospace;cursor:pointer;padding:7px 12px;' +
+          'background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);' +
+          'color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.1);' +
+          'border-radius:20px;opacity:0.45;transition:opacity .2s,background .2s,color .2s;' +
+          'pointer-events:auto;user-select:none';
+        btn.onmouseenter = function () { btn.style.opacity = '1'; btn.style.background = 'rgba(0,0,0,0.7)'; btn.style.color = '#fff'; };
+        btn.onmouseleave = function () { btn.style.opacity = '0.45'; btn.style.background = 'rgba(0,0,0,0.55)'; btn.style.color = 'rgba(255,255,255,0.7)'; };
+        btn.onclick = toggle;
+        document.body.appendChild(btn);
+      }
+
+      function onKey(e) {
+        if (document.activeElement &&
+            (document.activeElement.tagName === 'INPUT' ||
+             document.activeElement.tagName === 'TEXTAREA' ||
+             document.activeElement.isContentEditable)) return;
+        if (e.key !== 'i' || e.ctrlKey || e.metaKey || e.altKey) return;
+
+        keys.push(Date.now());
+        if (keys.length > 2) keys.shift();
+        if (keys.length === 2 && keys[1] - keys[0] < 500) {
+          toggle();
+          keys = [];
+        }
+        clearTimeout(keyTimer);
+        keyTimer = setTimeout(function () { keys = []; }, 500);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', createToggle);
+      } else {
+        createToggle();
+      }
+      document.addEventListener('keydown', onKey);
+    })();
+  </script>
+  </>
+)}
