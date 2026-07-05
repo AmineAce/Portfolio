@@ -6,6 +6,8 @@ import { Font } from 'astro:assets';
 import SpeedInsights from "@vercel/speed-insights/astro";
 import Analytics from "@vercel/analytics/astro";
 import IslandOverlay from '../components/dev/IslandOverlay.astro';
+import PerfHUD from '../components/dev/PerfHUD.astro';
+import { CommandPalette } from '../components/CommandPalette.tsx';
 
 export interface Props {
   title: string;
@@ -176,5 +178,7 @@ const allSchemas = [...baseSchemas, ...schemas];
     <SpeedInsights />
     <Analytics />
     <IslandOverlay />
+    <PerfHUD />
+    <CommandPalette client:idle />
   </body>
 </html>

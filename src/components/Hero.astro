@@ -4,10 +4,10 @@ import { StatCounters } from '../components/StatCounters.tsx';
 ---
 
 <section id="hero" class="relative min-h-[80vh] flex flex-col justify-center px-6 pt-16 overflow-hidden">
-  <!-- Ambient glow behind name -->
-  <div class="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
-    <div class="w-[600px] h-[600px] bg-accent/5 rounded-full blur-3xl opacity-50"></div>
-    </div>
+<!-- Ambient glow behind name -->
+  <div class="absolute inset-0 pointer-events-none" aria-hidden="true" style="height: min(80vh, 720px);">
+    <div class="w-[600px] h-[600px] rounded-full" style="background: radial-gradient(circle, rgb(99 102 241 / 0.12) 0%, transparent 70%); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+  </div>
 
     <div class="mx-auto w-full max-w-[1100px] relative z-10">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -20,11 +20,13 @@ import { StatCounters } from '../components/StatCounters.tsx';
             Amine E.
           </h1>
 
+          <div class="mb-10">
           <div id="hero-tagline"
-            class="font-sans text-surface-400 text-base leading-relaxed max-w-lg mb-10"
+            class="font-sans text-surface-400 text-base leading-relaxed max-w-lg"
             style="animation: hero-fade-up 0.4s ease-out 0.35s both;"
         >
             Frontend developer. I build precise, performant interfaces.
+        </div>
         </div>
 
           <div class="mb-8 flex flex-wrap gap-3" style="animation: hero-fade-up 0.4s ease-out 0.5s both;">

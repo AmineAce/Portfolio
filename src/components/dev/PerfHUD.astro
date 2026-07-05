@@ -1,0 +1,160 @@
+---
+const devOnly = import.meta.env.DEV;
+---
+
+{devOnly && (
+  <script>
+    (async function () {
+      var COLORS = { good: '#22c55e', 'needs-improvement': '#f59e0b', poor: '#ef4444' };
+      var LABELS = { good: 'good', 'needs-improvement': 'needs improvement', poor: 'poor' };
+      var active = false;
+      var keys = [];
+      var keyTimer = null;
+      var metrics = { LCP: null, CLS: null, INP: null };
+
+      function fmtLCP(v) { return (v / 1000).toFixed(1) + 's'; }
+      function fmtCLS(v) { return v.toFixed(3); }
+      function fmtINP(v) { return Math.round(v) + 'ms'; }
+
+      function createHUD() {
+        if (document.getElementById('ph-container')) return;
+        active = true;
+
+        var c = document.createElement('div');
+        c.id = 'ph-container';
+        c.style.cssText = 'position:fixed;top:16px;right:16px;z-index:100001;' +
+          'background:rgba(0,0,0,0.72);backdrop-filter:blur(8px);' +
+          'color:rgba(255,255,255,0.85);font:11px/18px monospace;' +
+          'padding:10px 12px;border-radius:8px;' +
+          'border:1px solid rgba(255,255,255,0.08);min-width:180px';
+        document.body.appendChild(c);
+        renderHUD();
+        updateToggle();
+      }
+
+      function destroyHUD() {
+        var c = document.getElementById('ph-container');
+        if (c) c.remove();
+        active = false;
+        updateToggle();
+      }
+
+      function toggle() {
+        active ? destroyHUD() : createHUD();
+      }
+
+      function metricRow(name, metric, formatter) {
+        var value = metric ? metric.value : null;
+        var rating = metric ? metric.rating : null;
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:8px';
+        var dot = document.createElement('span');
+        dot.style.cssText = 'display:inline-block;width:7px;height:7px;border-radius:50%;' +
+          'background:' + (rating ? COLORS[rating] : '#555') + ';flex-shrink:0';
+        row.appendChild(dot);
+        var label = document.createElement('span');
+        label.textContent = name;
+        label.style.cssText = 'width:32px;flex-shrink:0;opacity:0.6';
+        row.appendChild(label);
+        var val = document.createElement('span');
+        if (value !== null) {
+          val.textContent = formatter(value);
+        } else {
+          val.textContent = '\u2014';
+          val.style.opacity = '0.35';
+        }
+        val.style.cssText = 'flex:1;text-align:right';
+        row.appendChild(val);
+        if (value !== null && rating) {
+          var tag = document.createElement('span');
+          tag.textContent = LABELS[rating];
+          tag.style.cssText = 'font-size:9px;opacity:0.5;flex-shrink:0';
+          row.appendChild(tag);
+        }
+        return row;
+      }
+
+      function renderHUD() {
+        var c = document.getElementById('ph-container');
+        if (!c) return;
+        c.textContent = '';
+
+        var header = document.createElement('div');
+        header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:6px';
+        var title = document.createElement('span');
+        title.textContent = '\uD83C\uDFF4 Perf';
+        title.style.cssText = 'font-weight:600;font-size:12px';
+        header.appendChild(title);
+        var close = document.createElement('button');
+        close.textContent = '\u00D7';
+        close.style.cssText = 'background:none;border:none;color:inherit;cursor:pointer;font-size:14px;opacity:0.5;padding:0;line-height:1';
+        close.onclick = destroyHUD;
+        header.appendChild(close);
+        c.appendChild(header);
+
+        c.appendChild(metricRow('LCP', metrics.LCP, fmtLCP));
+        c.appendChild(metricRow('CLS', metrics.CLS, fmtCLS));
+        c.appendChild(metricRow('INP', metrics.INP, fmtINP));
+
+        var footer = document.createElement('div');
+        footer.style.cssText = 'margin-top:6px;opacity:0.35;font-size:9px;border-top:1px solid rgba(255,255,255,0.08);padding-top:6px';
+        footer.textContent = 'updates live \u00B7 ' +
+          (metrics.LCP || metrics.CLS || metrics.INP ? 'reported' : 'waiting for data\u2026');
+        c.appendChild(footer);
+      }
+
+      function updateToggle() {
+        var btn = document.getElementById('ph-toggle');
+        if (!btn) return;
+        btn.textContent = active ? '\uD83C\uDFF4 perf \u25B2' : '\uD83C\uDFF4 perf';
+        btn.style.borderColor = active ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)';
+      }
+
+      function createToggle() {
+        if (document.getElementById('ph-toggle')) return;
+        var btn = document.createElement('button');
+        btn.id = 'ph-toggle';
+        btn.textContent = '\uD83C\uDFF4 perf';
+        btn.setAttribute('aria-label', 'Toggle performance HUD');
+        btn.style.cssText = 'position:fixed;top:16px;right:16px;z-index:100002;' +
+          'font:12px/1 monospace;cursor:pointer;padding:7px 12px;' +
+          'background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);' +
+          'color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.1);' +
+          'border-radius:20px;opacity:0.45;transition:opacity .2s,background .2s,color .2s;' +
+          'pointer-events:auto;user-select:none';
+        btn.onmouseenter = function () { btn.style.opacity = '1'; btn.style.background = 'rgba(0,0,0,0.7)'; btn.style.color = '#fff'; };
+        btn.onmouseleave = function () { btn.style.opacity = '0.45'; btn.style.background = 'rgba(0,0,0,0.55)'; btn.style.color = 'rgba(255,255,255,0.7)'; };
+        btn.onclick = toggle;
+        document.body.appendChild(btn);
+      }
+
+      function onKey(e) {
+        if (document.activeElement &&
+            (document.activeElement.tagName === 'INPUT' ||
+             document.activeElement.tagName === 'TEXTAREA' ||
+             document.activeElement.isContentEditable)) return;
+        if (e.key !== 'p' || e.ctrlKey || e.metaKey || e.altKey) return;
+        keys.push(Date.now());
+        if (keys.length > 2) keys.shift();
+        if (keys.length === 2 && keys[1] - keys[0] < 500) {
+          toggle();
+          keys = [];
+        }
+        clearTimeout(keyTimer);
+        keyTimer = setTimeout(function () { keys = []; }, 500);
+      }
+
+      var { onLCP, onCLS, onINP } = await import('web-vitals');
+      onLCP(function (m) { console.log('onLCP:', m); metrics.LCP = m; renderHUD(); }, { reportAllChanges: true });
+      onCLS(function (m) { console.log('onCLS:', m); metrics.CLS = m; renderHUD(); }, { reportAllChanges: true });
+      onINP(function (m) { console.log('onINP:', m); metrics.INP = m; renderHUD(); }, { reportAllChanges: true });
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', createToggle);
+      } else {
+        createToggle();
+      }
+      document.addEventListener('keydown', onKey);
+    })();
+  </script>
+)}

@@ -16,5 +16,11 @@
     "file": "components/Navbar.astro",
     "directive": "media",
     "line": 54
+  },
+  {
+    "component": "CommandPalette",
+    "file": "layouts/Base.astro",
+    "directive": "idle",
+    "line": 182
   }
 ]
