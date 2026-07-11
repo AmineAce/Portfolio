@@ -5,16 +5,20 @@ const devOnly = import.meta.env.DEV;
 {devOnly && (
   <script>
     (async function () {
-      var COLORS = { good: '#22c55e', 'needs-improvement': '#f59e0b', poor: '#ef4444' };
-      var LABELS = { good: 'good', 'needs-improvement': 'needs improvement', poor: 'poor' };
+      var COLORS: Record<string, string> = { good: '#22c55e', 'needs-improvement': '#f59e0b', poor: '#ef4444' };
+      var LABELS: Record<string, string> = { good: 'good', 'needs-improvement': 'needs improvement', poor: 'poor' };
       var active = false;
-      var keys = [];
-      var keyTimer = null;
-      var metrics = { LCP: null, CLS: null, INP: null };
+      var keys: number[] = [];
+      var keyTimer: ReturnType<typeof setTimeout> | null = null;
+      var metrics: {
+        LCP: { value: number; rating: string } | null;
+        CLS: { value: number; rating: string } | null;
+        INP: { value: number; rating: string } | null;
+      } = { LCP: null, CLS: null, INP: null };
 
-      function fmtLCP(v) { return (v / 1000).toFixed(1) + 's'; }
-      function fmtCLS(v) { return v.toFixed(3); }
-      function fmtINP(v) { return Math.round(v) + 'ms'; }
+      function fmtLCP(v: number) { return (v / 1000).toFixed(1) + 's'; }
+      function fmtCLS(v: number) { return v.toFixed(3); }
+      function fmtINP(v: number) { return Math.round(v) + 'ms'; }
 
       function createHUD() {
         if (document.getElementById('ph-container')) return;
@@ -22,11 +26,11 @@ const devOnly = import.meta.env.DEV;
 
         var c = document.createElement('div');
         c.id = 'ph-container';
-        c.style.cssText = 'position:fixed;top:16px;right:16px;z-index:100001;' +
+        c.style.cssText = 'position:fixed;top:16px;right:16px;z-index:100003;' +
           'background:rgba(0,0,0,0.72);backdrop-filter:blur(8px);' +
           'color:rgba(255,255,255,0.85);font:11px/18px monospace;' +
           'padding:10px 12px;border-radius:8px;' +
-          'border:1px solid rgba(255,255,255,0.08);min-width:180px';
+          'border:1px solid rgba(255,255,255,0.08);min-width:140px';
         document.body.appendChild(c);
         renderHUD();
         updateToggle();
@@ -43,7 +47,11 @@ const devOnly = import.meta.env.DEV;
         active ? destroyHUD() : createHUD();
       }
 
-      function metricRow(name, metric, formatter) {
+      function metricRow(
+        name: string,
+        metric: { value: number; rating: string } | null,
+        formatter: (v: number) => string
+      ) {
         var value = metric ? metric.value : null;
         var rating = metric ? metric.rating : null;
         var row = document.createElement('div');
@@ -80,7 +88,7 @@ const devOnly = import.meta.env.DEV;
         c.textContent = '';
 
         var header = document.createElement('div');
-        header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:6px';
+        header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px';
         var title = document.createElement('span');
         title.textContent = '\uD83C\uDFF4 Perf';
         title.style.cssText = 'font-weight:600;font-size:12px';
@@ -88,6 +96,8 @@ const devOnly = import.meta.env.DEV;
         var close = document.createElement('button');
         close.textContent = '\u00D7';
         close.style.cssText = 'background:none;border:none;color:inherit;cursor:pointer;font-size:14px;opacity:0.5;padding:0;line-height:1';
+        close.onmouseenter = function () { close.style.opacity = '1'; };
+        close.onmouseleave = function () { close.style.opacity = '0.5'; };
         close.onclick = destroyHUD;
         header.appendChild(close);
         c.appendChild(header);
@@ -116,38 +126,41 @@ const devOnly = import.meta.env.DEV;
         btn.id = 'ph-toggle';
         btn.textContent = '\uD83C\uDFF4 perf';
         btn.setAttribute('aria-label', 'Toggle performance HUD');
-        btn.style.cssText = 'position:fixed;top:16px;right:16px;z-index:100002;' +
+        btn.style.cssText = 'position:fixed;bottom:16px;right:140px;z-index:100002;' +
           'font:12px/1 monospace;cursor:pointer;padding:7px 12px;' +
-          'background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);' +
+          'background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);' +
           'color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.1);' +
-          'border-radius:20px;opacity:0.45;transition:opacity .2s,background .2s,color .2s;' +
+          'border-radius:20px;opacity:0.9;transition:opacity .2s,background .2s,color .2s;' +
           'pointer-events:auto;user-select:none';
-        btn.onmouseenter = function () { btn.style.opacity = '1'; btn.style.background = 'rgba(0,0,0,0.7)'; btn.style.color = '#fff'; };
-        btn.onmouseleave = function () { btn.style.opacity = '0.45'; btn.style.background = 'rgba(0,0,0,0.55)'; btn.style.color = 'rgba(255,255,255,0.7)'; };
+        btn.onmouseenter = function () { btn.style.opacity = '1'; btn.style.background = 'rgba(0,0,0,0.8)'; btn.style.color = '#fff'; };
+        btn.onmouseleave = function () { btn.style.opacity = '0.9'; btn.style.background = 'rgba(0,0,0,0.75)'; btn.style.color = 'rgba(255,255,255,0.7)'; };
         btn.onclick = toggle;
         document.body.appendChild(btn);
       }
 
-      function onKey(e) {
-        if (document.activeElement &&
-            (document.activeElement.tagName === 'INPUT' ||
-             document.activeElement.tagName === 'TEXTAREA' ||
-             document.activeElement.isContentEditable)) return;
-        if (e.key !== 'p' || e.ctrlKey || e.metaKey || e.altKey) return;
+      function onKey(e: KeyboardEvent) {
+        var activeEl = document.activeElement;
+        if (activeEl &&
+            (activeEl.tagName === 'INPUT' ||
+             activeEl.tagName === 'TEXTAREA' ||
+             (activeEl as HTMLElement).isContentEditable)) return;
+        if (e.key !== 'p') return;
+        e.preventDefault();
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
         keys.push(Date.now());
         if (keys.length > 2) keys.shift();
         if (keys.length === 2 && keys[1] - keys[0] < 500) {
           toggle();
           keys = [];
         }
-        clearTimeout(keyTimer);
+        if (keyTimer !== null) clearTimeout(keyTimer);
         keyTimer = setTimeout(function () { keys = []; }, 500);
       }
 
       var { onLCP, onCLS, onINP } = await import('web-vitals');
-      onLCP(function (m) { console.log('onLCP:', m); metrics.LCP = m; renderHUD(); }, { reportAllChanges: true });
-      onCLS(function (m) { console.log('onCLS:', m); metrics.CLS = m; renderHUD(); }, { reportAllChanges: true });
-      onINP(function (m) { console.log('onINP:', m); metrics.INP = m; renderHUD(); }, { reportAllChanges: true });
+      onLCP(function (m) { metrics.LCP = m; renderHUD(); }, { reportAllChanges: true });
+      onCLS(function (m) { metrics.CLS = m; renderHUD(); }, { reportAllChanges: true });
+      onINP(function (m) { metrics.INP = m; renderHUD(); }, { reportAllChanges: true });
 
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', createToggle);

@@ -1,7 +1,7 @@
 ---
 const devOnly = import.meta.env.DEV;
 
-let islands = [];
+let islands: Array<{ component: string; directive: string }> = [];
 if (devOnly) {
   try {
     islands = (await import('../../data/islands.json')).default;
@@ -16,12 +16,14 @@ if (devOnly) {
   <div id="io-data" data-islands={JSON.stringify(islands)} style="display:none"></div>
   <script>
     (function () {
-      var ISLANDS = [];
-      try {
-        ISLANDS = JSON.parse(document.getElementById('io-data').getAttribute('data-islands'));
-      } catch (_) {}
+      var ISLANDS: Array<{ component: string; directive: string }> = [];
+      var ioDataEl = document.getElementById('io-data');
+      var dataAttr = ioDataEl?.getAttribute('data-islands');
+      if (dataAttr) {
+        try { ISLANDS = JSON.parse(dataAttr); } catch (_) {}
+      }
 
-      var COLORS = {
+      var COLORS: Record<string, string> = {
         load: '#3b82f6',
         idle: '#22c55e',
         visible: '#f59e0b',
@@ -29,11 +31,11 @@ if (devOnly) {
         only: '#ef4444',
       };
 
-      var LABELS = { load: 'client:load', idle: 'client:idle', visible: 'client:visible', media: 'client:media', only: 'client:only' };
+      var LABELS: Record<string, string> = { load: 'client:load', idle: 'client:idle', visible: 'client:visible', media: 'client:media', only: 'client:only' };
 
       var active = false;
-      var keys = [];
-      var keyTimer = null;
+      var keys: number[] = [];
+      var keyTimer: ReturnType<typeof setTimeout> | null = null;
 
       function enable() {
         if (document.getElementById('io-container')) return;
@@ -64,8 +66,17 @@ if (devOnly) {
         active ? disable() : enable();
       }
 
-      function unionRects(children) {
-        var union = null;
+      interface Rect {
+        left: number;
+        top: number;
+        right: number;
+        bottom: number;
+        width: number;
+        height: number;
+      }
+
+      function unionRects(children: HTMLCollection): Rect | null {
+        var union: { left: number; top: number; right: number; bottom: number } | null = null;
         for (var j = 0; j < children.length; j++) {
           var r = children[j].getBoundingClientRect();
           if (r.width === 0 && r.height === 0) continue;
@@ -79,16 +90,15 @@ if (devOnly) {
           }
         }
         if (!union) return null;
-        union.width  = union.right - union.left;
-        union.height = union.bottom - union.top;
-        return union;
+        return { ...union, width: union.right - union.left, height: union.bottom - union.top };
       }
 
       function draw() {
         var c = document.getElementById('io-container');
         if (!c) return;
+        var container = c;
 
-        c.textContent = '';
+        container.textContent = '';
 
         var islands = document.querySelectorAll('astro-island');
         var matchCount = 0;
@@ -96,20 +106,17 @@ if (devOnly) {
         islands.forEach(function (el) {
           var comp = el.getAttribute('component-export');
           var dir = el.getAttribute('client');
+          if (!comp || !dir) return;
           var found = ISLANDS.some(function (i) { return i.component === comp && i.directive === dir; });
           if (!found) return;
           matchCount++;
 
-          // <astro-island> has display:contents (no box of its own),
-          // so measure the union of its children instead.
           var rect = unionRects(el.children);
           if (!rect) {
-            // All children are display:none (e.g. client:media on desktop).
-            // Draw a small indicator dot offset from the parent element.
             var parent = el.parentElement;
             if (!parent) return;
             var pr = parent.getBoundingClientRect();
-            rect = { left: pr.left + 6, top: pr.top + 6, width: 6, height: 6 };
+            rect = { left: pr.left + 6, top: pr.top + 6, right: pr.left + 12, bottom: pr.top + 12, width: 6, height: 6 };
           }
 
           var color = COLORS[dir] || '#888';
@@ -120,7 +127,7 @@ if (devOnly) {
             'width:' + rect.width + 'px;height:' + rect.height + 'px;' +
             'outline:2px solid ' + color + ';outline-offset:1px;' +
             'border-radius:2px;z-index:1';
-          c.appendChild(box);
+          container.appendChild(box);
 
           var labelTop = Math.max(0, rect.top - 22);
           var label = document.createElement('div');
@@ -130,20 +137,30 @@ if (devOnly) {
             'background:' + color + ';color:#fff;' +
             'font:11px/18px monospace;padding:0 5px;' +
             'border-radius:3px;white-space:nowrap;z-index:2';
-          c.appendChild(label);
+          container.appendChild(label);
         });
 
         var legend = document.createElement('div');
-        legend.style.cssText = 'position:fixed;pointer-events:none;top:16px;right:16px;' +
+        legend.style.cssText = 'position:fixed;pointer-events:none;top:70px;right:16px;' +
           'background:rgba(0,0,0,0.72);backdrop-filter:blur(8px);' +
           'color:rgba(255,255,255,0.85);font:11px/18px monospace;' +
           'padding:10px 12px;border-radius:8px;' +
-          'border:1px solid rgba(255,255,255,0.08);z-index:3;min-width:140px';
+          'border:1px solid rgba(255,255,255,0.08);z-index:100004;min-width:140px';
 
-        var title = document.createElement('div');
-        title.textContent = '\uD83C\uDFF4 Islands';
-        title.style.cssText = 'font-weight:600;margin-bottom:6px;font-size:12px';
-        legend.appendChild(title);
+        var legendHeader = document.createElement('div');
+        legendHeader.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px';
+        var legendTitle = document.createElement('span');
+        legendTitle.textContent = '\uD83C\uDFF4 Islands';
+        legendTitle.style.cssText = 'font-weight:600;font-size:12px';
+        var legendClose = document.createElement('button');
+        legendClose.textContent = '\u00D7';
+        legendClose.style.cssText = 'background:none;border:none;color:inherit;cursor:pointer;font-size:14px;opacity:0.5;padding:0;line-height:1';
+        legendClose.onmouseenter = function () { legendClose.style.opacity = '1'; };
+        legendClose.onmouseleave = function () { legendClose.style.opacity = '0.5'; };
+        legendClose.onclick = disable;
+        legendHeader.appendChild(legendTitle);
+        legendHeader.appendChild(legendClose);
+        legend.appendChild(legendHeader);
 
         Object.keys(COLORS).forEach(function (dir) {
           var row = document.createElement('div');
@@ -159,7 +176,7 @@ if (devOnly) {
 
         var footer = document.createElement('div');
         footer.textContent = matchCount + ' island' + (matchCount !== 1 ? 's' : '') + ' matched';
-        footer.style.cssText = 'margin-top:6px;opacity:0.5;border-top:1px solid rgba(255,255,255,0.08);padding-top:6px';
+        footer.style.cssText = 'margin-top:8px;opacity:0.5;border-top:1px solid rgba(255,255,255,0.08);padding-top:6px';
         legend.appendChild(footer);
 
         c.appendChild(legend);
@@ -182,19 +199,20 @@ if (devOnly) {
           'font:12px/1 monospace;cursor:pointer;padding:7px 12px;' +
           'background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);' +
           'color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.1);' +
-          'border-radius:20px;opacity:0.45;transition:opacity .2s,background .2s,color .2s;' +
+          'border-radius:20px;opacity:0.9;transition:opacity .2s,background .2s,color .2s;' +
           'pointer-events:auto;user-select:none';
         btn.onmouseenter = function () { btn.style.opacity = '1'; btn.style.background = 'rgba(0,0,0,0.7)'; btn.style.color = '#fff'; };
-        btn.onmouseleave = function () { btn.style.opacity = '0.45'; btn.style.background = 'rgba(0,0,0,0.55)'; btn.style.color = 'rgba(255,255,255,0.7)'; };
+        btn.onmouseleave = function () { btn.style.opacity = '0.9'; btn.style.background = 'rgba(0,0,0,0.75)'; btn.style.color = 'rgba(255,255,255,0.7)'; };
         btn.onclick = toggle;
         document.body.appendChild(btn);
       }
 
-      function onKey(e) {
-        if (document.activeElement &&
-            (document.activeElement.tagName === 'INPUT' ||
-             document.activeElement.tagName === 'TEXTAREA' ||
-             document.activeElement.isContentEditable)) return;
+      function onKey(e: KeyboardEvent) {
+        var activeEl = document.activeElement;
+        if (activeEl &&
+            (activeEl.tagName === 'INPUT' ||
+             activeEl.tagName === 'TEXTAREA' ||
+             (activeEl as HTMLElement).isContentEditable)) return;
         if (e.key !== 'i' || e.ctrlKey || e.metaKey || e.altKey) return;
 
         keys.push(Date.now());
@@ -203,7 +221,7 @@ if (devOnly) {
           toggle();
           keys = [];
         }
-        clearTimeout(keyTimer);
+        if (keyTimer !== null) clearTimeout(keyTimer);
         keyTimer = setTimeout(function () { keys = []; }, 500);
       }
 

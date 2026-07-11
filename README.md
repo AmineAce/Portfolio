@@ -6,14 +6,14 @@ Built with [Astro](https://astro.build), [Tailwind CSS v4](https://tailwindcss.c
 
 ## Tech Stack
 
-- **Framework**: Astro 6 + TypeScript 6
+- **Framework**: Astro 7 + TypeScript 6
 - **Styling**: Tailwind CSS v4 + @tailwindcss/typography
 - **Fonts**: Geist Sans, Geist Mono, Instrument Serif (via Fontsource + Astro Font API)
 - **Icons**: Tabler Icons (via astro-icon)
 - **Content**: Markdown with Astro Content Collections
 - **Contact**: Resend API (serverless function at `/api/contact`)
 - **Analytics**: Vercel Analytics + Speed Insights
-- **Deploy**: Vercel (SSR)
+- **Deploy**: Vercel (static + serverless function)
 
 ## Project Structure
 
@@ -38,5 +38,6 @@ public/             # Static assets
 | `npm run dev`             | Start dev server at `localhost:4321` |
 | `npm run build`           | Build production site to `./dist/`   |
 | `npm run preview`         | Preview production build locally     |
-| `npm run astro check`     | Run TypeScript checks                |
-| `npm run astro -- --help` | Astro CLI help                       |
+| `npm run check`           | Run TypeScript checks                |
+| `npm run scan:islands`    | Generate island manifest for overlay |
+| `npx astro --help`        | Astro CLI help                       |

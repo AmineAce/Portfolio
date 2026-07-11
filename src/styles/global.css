@@ -2,7 +2,6 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-surface-black: #09090b;
   --color-surface-950: #09090b;
   --color-surface-900: #18181b;
   --color-surface-800: #27272a;
@@ -11,7 +10,6 @@
   --color-surface-400: #a1a1aa;
   --color-surface-200: #e4e4e7;
   --color-surface-50: #fafafa;
-  --color-surface-white: #fafafa;
   --color-accent: #6366f1;
   --color-accent-muted: #818cf8;
   --color-accent-dim: #6366f118;
@@ -99,42 +97,84 @@
   /* scroll-bar-dot removed */
 }
 
-@layer utilities {
-  .glow-indigo {
-    position: relative;
-  }
+/*
+ * Scroll-reveal — progressive enhancement:
+ * - Default (no JS): content is fully visible
+ * - html.js + motion OK: hide until .visible is added by IntersectionObserver
+ * - prefers-reduced-motion: always visible, no transitions
+ */
+.reveal,
+.reveal-scale,
+.reveal-stagger > * {
+  opacity: 1;
+  transform: none;
 }
 
-/* Scroll-reveal: add .visible via IntersectionObserver to trigger transition */
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+@media (prefers-reduced-motion: no-preference) {
+  html.js .reveal:not(.visible) {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  html.js .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+
+  html.js .reveal-scale:not(.visible) {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  html.js .reveal-scale.visible {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+
+  html.js .reveal-stagger:not(.visible) > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+  }
+  html.js .reveal-stagger.visible > * {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+  }
+  html.js .reveal-stagger.visible > *:nth-child(1) { transition-delay: 0s; }
+  html.js .reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.08s; }
+  html.js .reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.16s; }
+  html.js .reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.24s; }
+  html.js .reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.32s; }
+  html.js .reveal-stagger.visible > *:nth-child(6) { transition-delay: 0.4s; }
 }
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-scale,
+  .reveal-stagger > *,
+  .reveal.visible,
+  .reveal-scale.visible,
+  .reveal-stagger.visible > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    transition-delay: 0s !important;
+  }
+
+  .hero-animate {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .char-face {
+    transition: none !important;
+    animation: none !important;
+  }
 }
-.reveal-scale {
-  opacity: 0;
-  transform: scale(0.95);
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-}
-.reveal-scale.visible {
-  opacity: 1;
-  transform: scale(1);
-}
-.reveal-stagger > * {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.45s ease-out, transform 0.45s ease-out;
-}
-.reveal-stagger.visible > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.08s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.16s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.24s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.32s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.visible > *:nth-child(6) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
 
 @keyframes hero-glow-in {
   from { opacity: 0; transform: scale(0.8); }

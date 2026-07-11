@@ -5,9 +5,7 @@ dist/
 .DS_Store
 .astro/
 .soulforge/
+.empryo/
 .vercel/
 .vscode/
-.env*.local
 lh-report.html
-.empryo/
-.soulforge/

@@ -146,7 +146,7 @@ export function ContactForm({ endpoint = '/api/contact' }: ContactFormProps) {
           id="message"
           name="message"
           required
-          rows="4"
+          rows={4}
           value={message}
           onInput={(e) => setMessage((e.target as HTMLTextAreaElement).value)}
           class="w-full bg-surface-950/60 border border-surface-700/60 rounded-input px-4 py-3 text-sm text-surface-200 placeholder-surface-600/60 outline-none transition-all duration-base ease-expo-out focus:border-accent/60 focus:bg-surface-950 focus:shadow-[0_0_24px_-12px] focus:shadow-accent/30 resize-none"
@@ -157,7 +157,7 @@ export function ContactForm({ endpoint = '/api/contact' }: ContactFormProps) {
       <button
         type="submit"
         disabled={loading}
-        class="w-full rounded-input bg-surface-white text-surface-black font-medium px-6 py-3 text-sm border border-surface-white transition-all duration-base ease-expo-out hover:bg-accent hover:text-surface-white hover:border-accent hover:shadow-[0_0_28px_-10px] hover:shadow-accent/40 active:scale-95"
+        class="w-full rounded-input bg-surface-50 text-surface-950 font-medium px-6 py-3 text-sm border border-surface-50 transition-all duration-base ease-expo-out hover:bg-accent hover:text-surface-50 hover:border-accent hover:shadow-[0_0_28px_-10px] hover:shadow-accent/40 active:scale-95"
       >
         <span ref={submitTextRef}>Send me your idea</span>
         {loading && (

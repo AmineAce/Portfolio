@@ -3,7 +3,7 @@ import VitruvianMan from '../components/VitruvianMan.astro';
 import { StatCounters } from '../components/StatCounters.tsx';
 ---
 
-<section id="hero" class="relative min-h-[80vh] flex flex-col justify-center px-6 pt-16 overflow-hidden">
+<section id="hero" class="relative min-h-svh flex flex-col px-6 pt-16 overflow-hidden md:min-h-[80vh] md:justify-center">
 <!-- Ambient glow behind name -->
   <div class="absolute inset-0 pointer-events-none" aria-hidden="true" style="height: min(80vh, 720px);">
     <div class="w-[600px] h-[600px] rounded-full" style="background: radial-gradient(circle, rgb(99 102 241 / 0.12) 0%, transparent 70%); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
@@ -14,22 +14,27 @@ import { StatCounters } from '../components/StatCounters.tsx';
         <!-- Left: Text -->
       <div>
           <h1
-            class="font-serif italic text-surface-white text-7xl leading-tight tracking-tighter lg:text-8xl"
+            class="font-serif italic text-surface-50 text-7xl leading-tight tracking-tighter lg:text-8xl hero-animate"
             style="animation: hero-scale-in 0.4s ease-out 0.15s both;"
           >
             Amine E.
           </h1>
 
-          <div class="mb-10">
+          <div class="mb-10" style="min-height:52px">
           <div id="hero-tagline"
-            class="font-sans text-surface-400 text-base leading-relaxed max-w-lg"
+            class="font-sans text-surface-400 text-base leading-relaxed max-w-lg hidden md:block hero-animate"
             style="animation: hero-fade-up 0.4s ease-out 0.35s both;"
         >
             Frontend developer. I build precise, performant interfaces.
         </div>
+          <div id="hero-tagline-mobile" aria-live="polite" class="md:hidden">
+            <p class="font-sans text-surface-400 text-base leading-relaxed max-w-lg">Frontend developer. I build precise, performant interfaces.</p>
+            <p class="font-sans text-surface-400 text-base leading-relaxed max-w-lg text-fade-out">Thoughtful interactions, clean code, real products.</p>
+            <p class="font-sans text-surface-400 text-base leading-relaxed max-w-lg text-fade-out">AI-assisted development, shipping the results.</p>
+          </div>
         </div>
 
-          <div class="mb-8 flex flex-wrap gap-3" style="animation: hero-fade-up 0.4s ease-out 0.5s both;">
+          <div class="mb-8 flex flex-wrap gap-3 hero-animate" style="animation: hero-fade-up 0.4s ease-out 0.5s both;">
             <a
               href="#work"
               class="rounded-input bg-white text-black font-medium px-6 py-3 text-sm border border-white transition-all duration-micro hover:bg-accent hover:text-white hover:border-accent active:scale-95"
@@ -59,23 +64,172 @@ import { StatCounters } from '../components/StatCounters.tsx';
 
 <script>
   import { slotText } from "slot-text";
+  import type { SlotTextController } from "slot-text";
 
-  const taglineEl = document.getElementById("hero-tagline");
-  if (taglineEl) {
-    const taglines = [
-      "Frontend developer. I build precise, performant interfaces.",
-      "Thoughtful interactions, clean code, real products.",
-      "AI-assisted development, shipping the results.",
-    ];
-    const label = slotText(taglineEl, taglines[0], { duration: 240, stagger: 25, bounce: 0.5 });
-    let i = 1;
-    let paused = false;
-    taglineEl.addEventListener("mouseenter", () => (paused = true));
-    taglineEl.addEventListener("mouseleave", () => (paused = false));
-    setInterval(() => {
-      if (paused) return;
-      label.set(taglines[i % taglines.length], { direction: "up" });
-      i++;
+  const taglines = [
+    "Frontend developer. I build precise, performant interfaces.",
+    "Thoughtful interactions, clean code, real products.",
+    "AI-assisted development, shipping the results.",
+  ];
+
+  const DESKTOP_MATCH = "(min-width: 768px)";
+  const REDUCE_MOTION = "(prefers-reduced-motion: reduce)";
+
+  let desktopLabel: (SlotTextController & { _paused?: boolean }) | null = null;
+  let mobileIdx = 0;
+  let mobileTimer: number | null = null;
+  let desktopTimer: number | null = null;
+  let mobilePaused = false;
+
+  function prefersReducedMotion() {
+    return window.matchMedia(REDUCE_MOTION).matches;
+  }
+
+  function showMobilePhrase(idx: number) {
+    var ps = document.querySelectorAll<HTMLParagraphElement>("#hero-tagline-mobile p");
+    ps.forEach(function (p, i) {
+      if (i === idx) {
+        p.classList.remove("text-fade-out");
+        p.classList.add("text-fade-in");
+        p.style.display = "";
+      } else {
+        p.classList.remove("text-fade-in");
+        p.classList.add("text-fade-out");
+        p.style.display = "none";
+      }
+    });
+  }
+
+  function startMobile() {
+    var mobileEl = document.getElementById("hero-tagline-mobile");
+    var desktopEl = document.getElementById("hero-tagline");
+    if (mobileEl) mobileEl.style.display = "";
+    if (desktopEl) desktopEl.style.display = "none";
+    mobileIdx = 0;
+    showMobilePhrase(0);
+
+    // Static first line only when user prefers reduced motion
+    if (prefersReducedMotion()) return;
+
+    mobileTimer = window.setInterval(function () {
+      if (mobilePaused) return;
+      var old = mobileIdx;
+      mobileIdx = (mobileIdx + 1) % taglines.length;
+      var ps = document.querySelectorAll<HTMLParagraphElement>("#hero-tagline-mobile p");
+      var from = ps[old];
+      var to = ps[mobileIdx];
+      from.classList.remove("text-fade-in");
+      from.classList.add("text-fade-out");
+      to.classList.remove("text-fade-out");
+      to.classList.add("text-fade-in");
+      to.style.display = "";
+      setTimeout(function () { from.style.display = "none"; }, 320);
     }, 5000);
   }
+
+  function stopMobile() {
+    if (mobileTimer !== null) clearInterval(mobileTimer);
+    mobileTimer = null;
+  }
+
+  function startDesktop() {
+    stopMobile();
+    stopDesktop();
+    var mobileEl = document.getElementById("hero-tagline-mobile");
+    var taglineEl = document.getElementById("hero-tagline");
+    if (mobileEl) mobileEl.style.display = "none";
+    if (!taglineEl) return;
+    taglineEl.style.display = "";
+
+    if (prefersReducedMotion()) {
+      taglineEl.textContent = taglines[0];
+      return;
+    }
+
+    desktopLabel = slotText(taglineEl, taglines[0], { duration: 240, stagger: 25, bounce: 0.5 });
+    taglineEl.addEventListener("mouseenter", function () {
+      if (desktopLabel) desktopLabel._paused = true;
+    });
+    taglineEl.addEventListener("mouseleave", function () {
+      if (desktopLabel) desktopLabel._paused = false;
+    });
+    var desktopIdx = 1;
+    desktopTimer = window.setInterval(function () {
+      if (desktopLabel && !desktopLabel._paused) {
+        desktopLabel.set(taglines[desktopIdx % taglines.length], { direction: "up" });
+        desktopIdx++;
+      }
+    }, 5000);
+  }
+
+  function stopDesktop() {
+    if (desktopTimer !== null) clearInterval(desktopTimer);
+    desktopTimer = null;
+    if (desktopLabel) {
+      desktopLabel.destroy();
+      desktopLabel = null;
+    }
+  }
+
+  function onBreakpointChange(e: MediaQueryListEvent) {
+    if (e.matches) {
+      stopMobile();
+      startDesktop();
+    } else {
+      stopDesktop();
+      startMobile();
+    }
+  }
+
+  function onMotionChange() {
+    stopMobile();
+    stopDesktop();
+    var mq = window.matchMedia(DESKTOP_MATCH);
+    if (mq.matches) startDesktop();
+    else startMobile();
+  }
+
+  var mq = window.matchMedia(DESKTOP_MATCH);
+  mq.addEventListener("change", onBreakpointChange);
+
+  var motionMq = window.matchMedia(REDUCE_MOTION);
+  if (motionMq.addEventListener) {
+    motionMq.addEventListener("change", onMotionChange);
+  }
+
+  if (mq.matches) {
+    startDesktop();
+  } else {
+    startMobile();
+  }
 </script>
+
+<style>
+  .text-fade-out {
+    opacity: 0;
+    transition: opacity 300ms ease-out;
+    display: none;
+  }
+  .text-fade-in {
+    opacity: 1;
+    transition: opacity 300ms ease-out;
+  }
+  #hero-tagline-mobile p {
+    position: absolute;
+  }
+  #hero-tagline-mobile {
+    position: relative;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-animate {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .text-fade-out,
+    .text-fade-in {
+      transition: none !important;
+    }
+  }
+</style>

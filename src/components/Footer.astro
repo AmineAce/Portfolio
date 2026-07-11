@@ -1,26 +1,31 @@
 ---
 import Brand from './Brand.astro';
 import { Icon } from 'astro-icon/components';
+
+const { version: astroVersion } = await import('astro/package.json');
+const { version: viteVersion } = await import('vite/package.json');
+const { version: tailwindVersion } = await import('tailwindcss/package.json');
+const { version: tsVersion } = await import('typescript/package.json');
 ---
 
 <footer class="border-t border-surface-900 py-10">
-  <div class="max-w-[1100px] mx-auto px-6 flex justify-between items-center">
+  <div class="max-w-[1100px] mx-auto px-6 flex flex-col items-center gap-4 md:flex-row md:justify-between">
     <Brand size="xs" muted />
-    <div class="flex items-center gap-3 text-xs text-surface-500">
+    <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-surface-500">
       <span class="inline-flex items-center gap-1.5 cursor-default select-none transition-colors duration-micro hover:text-accent">
-        <Icon name="simple-icons:astro" size="14" /><span>Astro 7</span>
+        <Icon name="simple-icons:astro" size="14" /><span>Astro {astroVersion.split('.')[0]}</span>
       </span>
       <span class="text-surface-700 select-none" aria-hidden="true">/</span>
       <span class="inline-flex items-center gap-1.5 cursor-default select-none transition-colors duration-micro hover:text-accent">
-        <Icon name="simple-icons:vite" size="14" /><span>Vite 8</span>
+        <Icon name="simple-icons:vite" size="14" /><span>Vite {viteVersion.split('.')[0]}</span>
       </span>
       <span class="text-surface-700 select-none" aria-hidden="true">/</span>
       <span class="inline-flex items-center gap-1.5 cursor-default select-none transition-colors duration-micro hover:text-accent">
-        <Icon name="simple-icons:tailwindcss" size="14" /><span>Tailwind 4</span>
+        <Icon name="simple-icons:tailwindcss" size="14" /><span>Tailwind {tailwindVersion.split('.')[0]}</span>
       </span>
       <span class="text-surface-700 select-none" aria-hidden="true">/</span>
       <span class="inline-flex items-center gap-1.5 cursor-default select-none transition-colors duration-micro hover:text-accent">
-        <Icon name="simple-icons:typescript" size="14" /><span>TS 6</span>
+        <Icon name="simple-icons:typescript" size="14" /><span>TS {tsVersion.split('.')[0]}</span>
       </span>
       <span class="text-surface-700 select-none" aria-hidden="true">/</span>
       <span class="inline-flex items-center gap-1.5 cursor-default select-none transition-colors duration-micro hover:text-accent">

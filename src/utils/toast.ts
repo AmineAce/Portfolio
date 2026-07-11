@@ -13,6 +13,9 @@ export function showToast(message: string, type: ToastType = 'error', duration =
   if (!container) {
     container = document.createElement('div');
     container.id = 'toast-container';
+    container.setAttribute('aria-live', 'assertive');
+    container.setAttribute('aria-relevant', 'additions text');
+    container.setAttribute('aria-atomic', 'false');
     Object.assign(container.style, {
       position: 'fixed',
       top: '80px',
@@ -27,7 +30,15 @@ export function showToast(message: string, type: ToastType = 'error', duration =
   }
 
   const toast = document.createElement('div');
+  toast.setAttribute('role', 'alert');
+  toast.setAttribute('aria-live', 'assertive');
+  toast.setAttribute('aria-atomic', 'true');
+
   const styles = TOAST_STYLES[type];
+  const reduceMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   Object.assign(toast.style, {
     pointerEvents: 'auto',
     padding: '12px 16px',
@@ -42,10 +53,12 @@ export function showToast(message: string, type: ToastType = 'error', duration =
     background: styles.bg,
     border: `1px solid ${styles.border}`,
     color: styles.color,
-    fontFamily: '"Geist Sans", ui-sans-serif, system-ui, sans-serif',
-    transition: 'opacity 0.25s ease-out, transform 0.25s ease-out',
-    opacity: '0',
-    transform: 'translateY(-12px)',
+    fontFamily: 'var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif',
+    transition: reduceMotion
+      ? 'none'
+      : 'opacity 0.25s ease-out, transform 0.25s ease-out',
+    opacity: reduceMotion ? '1' : '0',
+    transform: reduceMotion ? 'none' : 'translateY(-12px)',
   });
 
   const msg = document.createElement('span');
@@ -53,6 +66,8 @@ export function showToast(message: string, type: ToastType = 'error', duration =
   toast.appendChild(msg);
 
   const close = document.createElement('button');
+  close.type = 'button';
+  close.setAttribute('aria-label', 'Dismiss notification');
   close.textContent = '×';
   Object.assign(close.style, {
     background: 'none',
@@ -65,26 +80,32 @@ export function showToast(message: string, type: ToastType = 'error', duration =
     lineHeight: '1',
     flexShrink: '0',
   });
-  close.addEventListener('click', () => dismiss(toast));
+  close.addEventListener('click', () => dismiss(toast, reduceMotion));
   toast.appendChild(close);
 
   container.appendChild(toast);
 
-  requestAnimationFrame(() => {
-    toast.style.opacity = '1';
-    toast.style.transform = 'translateY(0)';
-  });
+  if (!reduceMotion) {
+    requestAnimationFrame(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+    });
+  }
 
-  let timer = setTimeout(() => dismiss(toast), duration);
+  let timer = setTimeout(() => dismiss(toast, reduceMotion), duration);
 
   toast.addEventListener('mouseenter', () => clearTimeout(timer));
   toast.addEventListener('mouseleave', () => {
-    timer = setTimeout(() => dismiss(toast), duration);
+    timer = setTimeout(() => dismiss(toast, reduceMotion), duration);
   });
 }
 
-function dismiss(toast: HTMLElement) {
+function dismiss(toast: HTMLElement, reduceMotion = false) {
   if (!toast.isConnected) return;
+  if (reduceMotion) {
+    toast.remove();
+    return;
+  }
   toast.style.opacity = '0';
   toast.style.transform = 'translateY(-8px)';
   setTimeout(() => {
