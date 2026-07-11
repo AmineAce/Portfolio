@@ -3,34 +3,45 @@ import { ContactForm } from '../components/ContactForm.tsx';
 ---
 
 <section id="contact" class="max-w-[1100px] mx-auto px-6 py-24">
-  <div class="border border-surface-800 rounded-card max-w-[500px] mx-auto mb-4 bg-surface-900/50 reveal-scale">
-    <div class="flex items-center justify-center gap-6 py-4 px-6">
-      <a
-        href="https://github.com/AmineAce"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-xs text-surface-500 transition-all duration-base ease-expo-out hover:text-accent hover:scale-105 tracking-wider uppercase"
-      >
-        GitHub
-      </a>
-      <span class="text-surface-700 select-none text-xs">/</span>
-      <a
-        href="https://x.com/_AMINEACE"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-xs text-surface-500 transition-all duration-base ease-expo-out hover:text-accent hover:scale-105 tracking-wider uppercase"
-      >
-        X
-      </a>
+  <div class="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 items-stretch">
+
+    <!-- Left: Form (3/5) -->
+    <div class="md:col-span-3 flex">
+      <div class="flex-1 border border-surface-800 rounded-card overflow-hidden bg-surface-900/50 reveal">
+        <div class="relative px-6 py-12">
+          <div class="absolute inset-0 pointer-events-none opacity-[0.03]"
+               style="background-image: radial-gradient(#e4e4e7 0.5px, transparent 0.5px); background-size: 20px 20px;"></div>
+          <ContactForm client:idle endpoint="/api/contact" />
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="border border-surface-800 rounded-card overflow-hidden relative max-w-[500px] mx-auto bg-surface-900/50 reveal">
-    <div class="relative min-h-[600px] flex flex-col justify-center px-6">
-      <ContactForm client:idle endpoint="/api/contact" />
-
+    <!-- Right: Sidebar (2/5) -->
+    <div class="md:col-span-2 flex">
+      <div class="flex-1 border border-surface-800 rounded-card bg-surface-900/50 p-8 reveal" style="animation-delay: 0.15s;">
+        <h3 class="font-serif italic text-2xl text-surface-50 mb-4">
+          Got an idea?
+        </h3>
+        <p class="text-surface-400 text-sm leading-relaxed mb-4">
+          I'm always excited to hear about interesting projects, collaborations, or just chat about frontend, AI tools, or web craftsmanship.
+        </p>
+        <p class="text-surface-400 text-sm leading-relaxed mb-6">
+          Whether it's a SaaS, a wild interactive experience, or just feedback — drop me a line.
+        </p>
+        <div class="flex items-center gap-4 mb-8">
+          <a href="https://github.com/AmineAce" target="_blank" rel="noopener noreferrer"
+             class="text-xs text-surface-500 tracking-wider uppercase transition-all duration-base ease-expo-out hover:text-accent hover:scale-105">GitHub</a>
+          <span class="text-surface-700 select-none text-xs">/</span>
+          <a href="https://x.com/_AMINEACE" target="_blank" rel="noopener noreferrer"
+             class="text-xs text-surface-500 tracking-wider uppercase transition-all duration-base ease-expo-out hover:text-accent hover:scale-105">X / Twitter</a>
+        </div>
+        <div class="border-t border-surface-800 pt-5">
+          <span class="text-xs text-surface-600">
+            Response time <span class="text-surface-400 font-medium">— I usually reply within 48 hours</span>
+          </span>
+        </div>
+      </div>
     </div>
+
   </div>
-
-
 </section>

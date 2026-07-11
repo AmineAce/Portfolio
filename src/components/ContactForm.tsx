@@ -157,7 +157,7 @@ export function ContactForm({ endpoint = '/api/contact' }: ContactFormProps) {
       <button
         type="submit"
         disabled={loading}
-        class="w-full rounded-input bg-surface-50 text-surface-950 font-medium px-6 py-3 text-sm border border-surface-50 transition-all duration-base ease-expo-out hover:bg-accent hover:text-surface-50 hover:border-accent hover:shadow-[0_0_28px_-10px] hover:shadow-accent/40 active:scale-95"
+        class="w-full rounded-input bg-accent font-medium px-6 py-3.5 text-sm text-white border border-accent transition-all duration-base ease-expo-out hover:shadow-[0_0_24px_-8px] hover:shadow-accent/40 hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <span ref={submitTextRef}>Send me your idea</span>
         {loading && (
