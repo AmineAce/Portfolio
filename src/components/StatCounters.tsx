@@ -12,12 +12,12 @@ export function StatCounters() {
     // -- Projects counter --
     if (projectsRef.current) {
       if (reduceMotion) {
-        projectsRef.current.textContent = '3+';
+        projectsRef.current.textContent = '4+';
       } else {
         const p = slotText(projectsRef.current, '0+', {
           duration: 150, stagger: 30, bounce: 0.5, interrupt: false,
         });
-        [1, 2, 3].forEach((n, i) => {
+        [1, 2, 3, 4].forEach((n, i) => {
           timeoutIds.push(setTimeout(() => p.set(n + '+', { direction: 'up' }), (i + 1) * 200));
         });
       }
@@ -35,7 +35,7 @@ export function StatCounters() {
       style="animation: hero-fade-up 0.4s ease-out 0.8s both;"
     >
       <div class="hero-animate" style="animation: hero-fade-up 0.35s ease-out 0s both;">
-        <span ref={projectsRef} data-stat-to="3+" class="text-2xl font-medium tracking-tight text-surface-50">0+</span>
+        <span ref={projectsRef} data-stat-to="4+" class="text-2xl font-medium tracking-tight text-surface-50">0+</span>
         <div class="mt-1 text-xs text-surface-500">Projects shipped</div>
       </div>
       <div class="hero-animate" style="animation: hero-fade-up 0.35s ease-out 0.08s both;">

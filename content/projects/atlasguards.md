@@ -1,6 +1,6 @@
 ---
 title: "AtlasGuards"
-description: "A secure digital release management platform for media professionals — built with Next.js 16, Supabase, Paddle, and Redis."
+description: "A secure digital release management platform for media professionals — built with Next.js 16, Supabase, Paddle, and Redis. Repository is private for security reasons."
 tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Supabase", "Paddle", "Redis"]
 year: 2025
 featured: true

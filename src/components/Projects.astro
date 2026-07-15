@@ -1,9 +1,12 @@
 ---
 import { getCollection } from 'astro:content';
+import { fetchRepos } from '../utils/github';
+import { mergeWithMarkdown } from '../utils/projects';
 import ProjectCard from './ProjectCard.astro';
 
-const allProjects = await getCollection('projects');
-const sortedProjects = allProjects.sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+const repos = await fetchRepos();
+const markdownEntries = await getCollection('projects');
+const projects = mergeWithMarkdown(repos, markdownEntries);
 ---
 
 <section id="work" class="max-w-[1100px] mx-auto px-6 py-24">
@@ -22,18 +25,11 @@ const sortedProjects = allProjects.sort((a, b) => (a.data.order || 0) - (b.data.
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 reveal-stagger">
-    {sortedProjects.map((project) => (
+    {projects.map((project) => (
       <div class="flex">
-          <ProjectCard entry={project} />
+          <ProjectCard project={project} />
       </div>
     ))}
-
-    <div
-      class="min-h-[220px] flex items-center justify-center rounded-card border border-dashed border-surface-800 bg-surface-900/30"
-    >
-      <span class="text-sm text-surface-500">More coming soon</span>
-    </div>
   </div>
-
 
 </section>

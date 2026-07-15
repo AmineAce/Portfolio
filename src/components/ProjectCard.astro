@@ -1,25 +1,38 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { Project } from '../types';
 
 interface Props {
-  entry: CollectionEntry<'projects'>;
+  project: Project;
 }
 
-const { entry } = Astro.props;
+const {
+  id,
+  title,
+  description,
+  tags,
+  liveUrl,
+  githubUrl,
+  image,
+  language,
+  stars,
+  hasCaseStudy,
+} = Astro.props.project;
 
-const { title, description, tags, liveUrl, githubUrl, image } = entry.data;
-const slug = entry.id;
-const caseStudyUrl = slug ? `/work/${slug}` : undefined;
+const caseStudyUrl = hasCaseStudy ? `/work/${id}` : undefined;
+const clickUrl = caseStudyUrl || githubUrl;
+const clickLabel = hasCaseStudy ? `Read case study: ${title}` : `View source: ${title}`;
 ---
 
 <article
   class="group relative flex h-full flex-col overflow-hidden rounded-card border border-surface-800 bg-surface-900/70 transition-all duration-base ease-expo-out hover:-translate-y-2 hover:border-accent/30 hover:shadow-[0_12px_40px_-12px] hover:shadow-accent/15"
 >
-  {caseStudyUrl && (
+  {clickUrl && (
     <a
-      href={caseStudyUrl}
+      href={clickUrl}
+      target={hasCaseStudy ? undefined : '_blank'}
+      rel={hasCaseStudy ? undefined : 'noopener noreferrer'}
       class="absolute inset-0 z-10"
-      aria-label={`Read case study: ${title}`}
+      aria-label={clickLabel}
     ></a>
   )}
   <div class="h-[180px]" style="background-color: var(--color-surface-950);">
@@ -62,6 +75,13 @@ const caseStudyUrl = slug ? `/work/${slug}` : undefined;
             {tag}
           </span>
         ))}
+        {language && !tags.includes(language) && (
+          <span
+            class="px-3 py-1 rounded-pill text-xs bg-surface-800 text-surface-400 border border-surface-700/50"
+          >
+            {language}
+          </span>
+        )}
       </div>
     </div>
 
@@ -84,8 +104,8 @@ const caseStudyUrl = slug ? `/work/${slug}` : undefined;
             aria-label={`${title} source code on GitHub`}
               class="relative z-20 px-3 py-1 rounded-input border border-surface-700/50 text-surface-400 transition-all duration-base ease-expo-out hover:border-accent hover:text-accent hover:bg-accent/5 active:scale-95 text-sm"
             >
-              Github
-            </a>
+              GitHub
+          </a>
         )}
           {liveUrl && (
             <a
@@ -98,6 +118,12 @@ const caseStudyUrl = slug ? `/work/${slug}` : undefined;
             </a>
         )}
       </div>
+      {stars > 0 && (
+        <span class="relative z-20 text-xs text-surface-500 flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+          {stars}
+        </span>
+      )}
     </div>
   </div>
 </article>

@@ -2,6 +2,8 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import { fetchRepos } from '../../utils/github';
+import { mergeWithMarkdown } from '../../utils/projects';
 import { SITE_URL } from '../../data/site';
 
 export async function getStaticPaths() {
@@ -15,9 +17,10 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 
-const allProjects = await getCollection('projects');
-const sorted = allProjects.sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
-const others = sorted.filter((p) => p.id !== entry.id).slice(0, 3);
+const repos = await fetchRepos();
+const allMarkdown = await getCollection('projects');
+const merged = mergeWithMarkdown(repos, allMarkdown);
+const others = merged.filter((p) => p.id !== entry.id).slice(0, 3);
 
 const { title, description, tags, year, featured, liveUrl, githubUrl, image } = entry.data;
 const pageTitle = `${title} | Amine`;
@@ -176,7 +179,7 @@ const pageSchemas = [breadcrumbSchema, articleSchema, softwareSchema];
         <section class="mt-24">
           <h2 class="text-2xl font-medium text-surface-200 tracking-tight mb-8">Other projects</h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {others.map((p) => <ProjectCard entry={p} />)}
+            {others.map((p) => <ProjectCard project={p} />)}
           </div>
         </section>
       )}
