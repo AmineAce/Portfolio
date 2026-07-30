@@ -1,6 +1,6 @@
 ---
 title: "CompareClash"
-description: "A performance-optimized blog with Incremental Static Regeneration (ISR), built with Next.js 15, Contentful CMS, and enterprise-grade optimizations."
+description: "A performance-optimized blog with Incremental Static Regeneration (ISR), built with Next.js 15.5, React 19, Contentful CMS, and enterprise-grade optimizations."
 tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Contentful", "Netlify", "ISR"]
 year: 2025
 featured: false
@@ -16,8 +16,10 @@ Static sites with traditional CMS workflows require a full rebuild for every con
 
 ## What I Built
 
-CompareClash is a Next.js 15 blog using the App Router with Incremental Static Regeneration (ISR), Contentful as a headless CMS, and shadcn/ui for the component layer. Content updates flow through Contentful webhooks that trigger ISR revalidation — new posts go live in 2-3 minutes without a full rebuild. The search index is statically generated at build time and refreshed on each revalidation. The page uses a secondary ISR endpoint for preview mode, allowing draft content to be reviewed before publishing. The site scores 95+ Performance, 98+ Accessibility, and 100 SEO on Lighthouse with a 102KB shared JS bundle. It's deployed on Netlify with webhook-driven automatic rebuilds for content model changes.
+CompareClash is a Next.js 15.5 blog using the App Router with React 19, Tailwind CSS v4, Incremental Static Regeneration (ISR), Contentful as a headless CMS, and shadcn/ui for the component layer. Content updates flow through Contentful webhooks that trigger ISR revalidation — new posts go live in 2-3 minutes without a full rebuild. The search index is statically generated at build time and refreshed on each revalidation. The page uses a secondary ISR endpoint for preview mode, allowing draft content to be reviewed before publishing. The site features Google Analytics and Ahrefs integration for production analytics, a dynamic sitemap and robots.txt for search engine crawling, structured data (JSON-LD) for rich search results, and auto-generated OG/Twitter card images for social sharing. It scores 95+ Performance, 98+ Accessibility, and 100 SEO on Lighthouse with a 102KB shared JS bundle, deployed on Netlify with webhook-driven automatic rebuilds for content model changes.
 
 ## What I Learned
 
 ISR is a powerful middle ground between SSG and SSR — you get static performance with dynamic freshness. The webhook-to-revalidation pipeline requires careful secret management and error handling to prevent infinite revalidation loops. Contentful's rich text renderer with custom component mappings is flexible but demands strict type contracts between the CMS content model and React components. I also learned that shadcn/ui's Radix-based primitives compose well with a CMS-driven design system when the component variants are modeled upfront rather than ad-hoc.
+
+Analytics and SEO infrastructure — Google Analytics, Ahrefs, dynamic sitemaps, structured data — is surprisingly straightforward when architected as middleware in the request pipeline rather than scattered across components. Handling them in layout-level wrappers and route handlers keeps the page components clean and the site easy to audit.

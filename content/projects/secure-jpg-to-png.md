@@ -4,7 +4,7 @@ description: "A 100% client-side privacy-first file converter supporting JPG, PN
 tags: ["React", "TypeScript", "Vite", "Tailwind CSS", "Web Workers", "Zustand"]
 year: 2024
 featured: false
-liveUrl: "https://secure-jpg-to-png.pages.dev"
+liveUrl: "https://secure-converter-s.vercel.app"
 githubUrl: "https://github.com/AmineAce/privacy-converter"
 order: 2
 image: "/projects/secure-jpg-to-png.webp"
@@ -16,7 +16,7 @@ Online file converters routinely upload user files to remote servers, inject ads
 
 ## What I Built
 
-Secure JPG to PNG is a 100% client-side file conversion tool that processes files entirely in the browser. Files never leave the user's device. I built it with React, TypeScript, and Vite, using Web Workers to keep the UI responsive during CPU-intensive operations. The tool supports six formats — JPG, PNG, WebP, SVG, HEIC (iPhone photos), and PDF — and can merge multiple images into a single PDF document. The architecture uses a configurable worker pool processing up to 5 files simultaneously, with transferable objects to prevent memory bloat during batch operations. Heavy dependencies like HEIC decoding and PDF generation are lazy-loaded to maintain fast initial page loads. State management uses Zustand with atomic selectors for optimal re-render performance. The application achieves a perfect Lighthouse score across all five categories.
+Secure JPG to PNG is a 100% client-side file conversion tool that processes files entirely in the browser. Files never leave the user's device. I built it with React 19 and Vite 6, using Web Workers to keep the UI responsive during CPU-intensive operations. The tool supports six formats — JPG, PNG, WebP, SVG, HEIC (iPhone photos), and PDF — with a generous 50MB file limit and unlimited batch processing. A real-time progress bar gives users clear visibility into conversion status. The architecture uses a configurable worker pool processing up to 5 files simultaneously, with transferable objects to prevent memory bloat during batch operations. Heavy dependencies like HEIC decoding and PDF generation are lazy-loaded to maintain fast initial page loads. State management uses Zustand with atomic selectors for optimal re-render performance. The application achieves a perfect Lighthouse score across all five categories.
 
 ## What I Learned
 
