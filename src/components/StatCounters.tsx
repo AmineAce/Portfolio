@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { slotText } from 'slot-text';
 
-export function StatCounters() {
+export function StatCounters({ count }: { count: number }) {
   const projectsRef = useRef<HTMLSpanElement>(null);
+  const target = `${count}+`;
 
   useEffect(() => {
     const rafIds: number[] = [];
@@ -12,12 +13,12 @@ export function StatCounters() {
     // -- Projects counter --
     if (projectsRef.current) {
       if (reduceMotion) {
-        projectsRef.current.textContent = '4+';
+        projectsRef.current.textContent = target;
       } else {
         const p = slotText(projectsRef.current, '0+', {
           duration: 150, stagger: 30, bounce: 0.5, interrupt: false,
         });
-        [1, 2, 3, 4].forEach((n, i) => {
+        Array.from({ length: count }, (_, i) => i + 1).forEach((n, i) => {
           timeoutIds.push(setTimeout(() => p.set(n + '+', { direction: 'up' }), (i + 1) * 200));
         });
       }
@@ -27,7 +28,7 @@ export function StatCounters() {
       rafIds.forEach(id => cancelAnimationFrame(id));
       timeoutIds.forEach(id => clearTimeout(id));
     };
-  }, []);
+  }, [count, target]);
 
   return (
     <div
@@ -35,7 +36,7 @@ export function StatCounters() {
       style="animation: hero-fade-up 0.4s ease-out 0.8s both;"
     >
       <div class="hero-animate" style="animation: hero-fade-up 0.35s ease-out 0s both;">
-        <span ref={projectsRef} data-stat-to="4+" class="text-2xl font-medium tracking-tight text-surface-50">0+</span>
+        <span ref={projectsRef} data-stat-to={target} class="text-2xl font-medium tracking-tight text-surface-50">0+</span>
         <div class="mt-1 text-xs text-surface-500">Projects shipped</div>
       </div>
       <div class="hero-animate" style="animation: hero-fade-up 0.35s ease-out 0.08s both;">

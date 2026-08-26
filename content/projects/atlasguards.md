@@ -5,8 +5,7 @@ tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Supabase", "Paddle", "
 year: 2025
 featured: true
 liveUrl: "https://atlasguards.com"
-githubUrl: "https://github.com/AmineAce/atlasguards"
-order: 1
+order: 4
 image: "/projects/atlasguards.webp"
 ---
 

@@ -1,6 +1,10 @@
 ---
+import { getCollection } from 'astro:content';
 import VitruvianMan from '../components/VitruvianMan.astro';
 import { StatCounters } from '../components/StatCounters.tsx';
+
+const projects = await getCollection('projects');
+const projectCount = projects.length;
 ---
 
 <section id="hero" class="relative min-h-svh flex flex-col px-6 pt-16 overflow-hidden md:min-h-[80vh] md:justify-center">
@@ -58,7 +62,7 @@ import { StatCounters } from '../components/StatCounters.tsx';
         </div>
       </div>
 
-    <StatCounters client:visible />
+    <StatCounters count={projectCount} client:visible />
   </div>
 </section>
 

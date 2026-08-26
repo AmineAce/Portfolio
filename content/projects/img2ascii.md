@@ -5,7 +5,7 @@ tags: ["Rust", "CLI", "Image Processing", "Parallel Processing"]
 year: 2026
 featured: false
 githubUrl: "https://github.com/AmineAce/img2ascii"
-order: 3
+order: 2
 ---
 
 ## The Problem

@@ -7,7 +7,7 @@ featured: false
 image: "/projects/blog-hub.webp"
 liveUrl: "https://compareclash.netlify.app/"
 githubUrl: "https://github.com/AmineAce/blog-hub"
-order: 4
+order: 5
 ---
 
 ## The Problem

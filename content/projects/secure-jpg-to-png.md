@@ -6,7 +6,7 @@ year: 2024
 featured: false
 liveUrl: "https://secure-converter-s.vercel.app"
 githubUrl: "https://github.com/AmineAce/privacy-converter"
-order: 2
+order: 6
 image: "/projects/secure-jpg-to-png.webp"
 ---
 
